@@ -22,13 +22,33 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const getProductsInCart = () => {
+    setCart(parsedCart);
+    return parsedCart;
+  };
+
   const removeFromCart = (id: number) => {
     const updatedCart = parsedCart.filter((product) => product.id !== id);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    setCart(updatedCart);
+  };
+
+  const updateAmount = (id: number, amount: number) : CartItem[] => {
+    const updatedCart : CartItem[] = parsedCart.map((product) => {
+      if(product.id == id) {
+        return {...product, amount}
+      }
+      return product
+    });
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    setCart(updatedCart);
+    return updatedCart
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, getProductsInCart, updateAmount }}
+    >
       {children}
     </CartContext.Provider>
   );

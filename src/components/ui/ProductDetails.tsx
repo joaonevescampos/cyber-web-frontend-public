@@ -47,6 +47,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         id: product.id,
         name: product.name,
         price: product.price,
+        url_image: product.url_image,
+        amount: 1,
       });
       addToast("Added to Cart!", false, 3000);
     }
