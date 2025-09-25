@@ -3,6 +3,7 @@ import { useToast } from "../../hooks/useToast";
 import { ToastContainer } from "../modal/ToastContainer";
 
 import type { ProductDataType } from "../../pages/ProductDetailsPage";
+import { useCart } from "../../hooks/useCart";
 
 interface ProductDetailsProps {
   product: ProductDataType;
@@ -22,6 +23,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     removeErrorToast,
   } = useToast();
 
+  const { addToCart } = useCart();
+
   const handleAddToWishlist = () => {
     addToast("Added to Wishlist!", false, 3000);
   };
@@ -40,6 +43,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   const handleAddToCart = () => {
     if (isAddToCartEnabled) {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+      });
       addToast("Added to Cart!", false, 3000);
     }
   };
