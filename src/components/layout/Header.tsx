@@ -11,7 +11,7 @@ export default function Header() {
     { name: "Home", path: "/" },
     { name: "Shop", path: "/products/all" },
     { name: "Contact Us", path: "/under-construction/contact" },
-    { name: "Blog", path: "/under-construction/blog" }
+    { name: "Blog", path: "/under-construction/blog" },
   ];
 
   const isActivePath = (itemPath: string) => {
@@ -60,10 +60,10 @@ export default function Header() {
                 <NavLink
                   key={item.name}
                   to={item.path}
-                  className={() => 
+                  className={() =>
                     `text-base font-medium transition-opacity ${
-                      isActivePath(item.path) && item.path !== "" 
-                        ? "text-black opacity-100" 
+                      isActivePath(item.path) && item.path !== ""
+                        ? "text-black opacity-100"
                         : "text-black opacity-30 hover:opacity-70"
                     }`
                   }
@@ -73,9 +73,16 @@ export default function Header() {
               ))}
             </nav>
 
-            <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <button
+              className="md:hidden"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
               <img
-                src={isMenuOpen ? "/src/assets/img/close_icon.svg" : "/src/assets/img/burguer_icon.svg"}
+                src={
+                  isMenuOpen
+                    ? "/src/assets/img/close_icon.svg"
+                    : "/src/assets/img/burguer_icon.svg"
+                }
                 alt={isMenuOpen ? "Close menu" : "Open menu"}
                 className="w-10 h-10"
               />
@@ -83,17 +90,15 @@ export default function Header() {
 
             <div className="hidden md:flex items-center gap-3 lg:gap-6">
               {[
-                { name: 'Favorites', src: favoritesIcon },
-                { name: 'Cart', src: cartIcon },
-                { name: 'User', src: userIcon }
-              ].map((item) => (
-                <button className="p-1" key={item.name}>
-                  <img
-                    src={item.src}
-                    alt={item.name}
-                    className="w-8 h-8"
-                  />
-                </button>
+                { name: "Favorites", src: favoritesIcon, path: "/under-construction" },
+                { name: "Cart", src: cartIcon, path: "/cart" },
+                { name: "User", src: userIcon, path: "/under-construction" },
+              ].map((item, index) => (
+                <Link to={item.path} key={index}>
+                  <button className="p-1">
+                    <img src={item.src} alt={item.name} className="w-8 h-8" />
+                  </button>
+                </Link>
               ))}
             </div>
           </div>
@@ -122,9 +127,9 @@ export default function Header() {
 
             <div className="mt-4 flex items-center gap-4">
               {[
-                { name: 'Favorites', src: favoritesIcon },
-                { name: 'Cart', src: cartIcon },
-                { name: 'User', src: userIcon }
+                { name: "Favorites", src: favoritesIcon },
+                { name: "Cart", src: cartIcon },
+                { name: "User", src: userIcon },
               ].map((item) => (
                 <button className="p-1" key={item.name}>
                   <img src={item.src} alt={item.name} className="w-8 h-8" />
