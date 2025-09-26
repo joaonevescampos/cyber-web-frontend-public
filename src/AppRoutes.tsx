@@ -7,6 +7,10 @@ import UnderConstructionPage from "./pages/UnderConstructionPage";
 import ScrollToTop from "./components/utils/ScrollToTop";
 import CategoryProducts from "./pages/CategoryProducts";
 import Cart from "./pages/Cart";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Payment from "./pages/Payment";
+
+import SignInPage from "./pages/SignInPage";
 
 const AppRoutes = () => {
   return (
@@ -20,6 +24,18 @@ const AppRoutes = () => {
         <Route
           path="/products/:categoryName/product/:id"
           element={<ProductDetailsPage />}
+        />
+        <Route path="/sign-in" element={<SignInPage />} />
+
+
+        {/* Protected Routes */}
+        <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
         />
 
         <Route path="/cart" element={<Cart />} />
