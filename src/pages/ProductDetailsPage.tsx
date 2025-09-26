@@ -20,7 +20,7 @@ export interface ProductDataType {
   price: number;
   discounted_price: number | null;
   stock: number;
-  url_image: string | null;
+  url_image: string;
   tag: string | null;
   category: { id: number; name: string };
   colors: { id: number; hex_code: string; name: string }[];

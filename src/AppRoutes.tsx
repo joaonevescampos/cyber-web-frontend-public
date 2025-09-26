@@ -6,6 +6,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import UnderConstructionPage from "./pages/UnderConstructionPage";
 import ScrollToTop from "./components/utils/ScrollToTop";
 import CategoryProducts from "./pages/CategoryProducts";
+import Cart from "./pages/Cart";
 
 const AppRoutes = () => {
   return (
@@ -20,6 +21,8 @@ const AppRoutes = () => {
           path="/products/:categoryName/product/:id"
           element={<ProductDetailsPage />}
         />
+
+        <Route path="/cart" element={<Cart />} />
         <Route path="/under-construction" element={<UnderConstructionPage />} />
         <Route
           path="/under-construction/contact"
