@@ -90,7 +90,11 @@ export default function Header() {
 
             <div className="hidden md:flex items-center gap-3 lg:gap-6">
               {[
-                { name: "Favorites", src: favoritesIcon, path: "/under-construction" },
+                {
+                  name: "Favorites",
+                  src: favoritesIcon,
+                  path: "/under-construction",
+                },
                 { name: "Cart", src: cartIcon, path: "/cart" },
                 { name: "User", src: userIcon, path: "/under-construction" },
               ].map((item, index) => (
@@ -127,13 +131,19 @@ export default function Header() {
 
             <div className="mt-4 flex items-center gap-4">
               {[
-                { name: "Favorites", src: favoritesIcon },
-                { name: "Cart", src: cartIcon },
-                { name: "User", src: userIcon },
-              ].map((item) => (
-                <button className="p-1" key={item.name}>
-                  <img src={item.src} alt={item.name} className="w-8 h-8" />
-                </button>
+                {
+                  name: "Favorites",
+                  src: favoritesIcon,
+                  path: "/under-construction",
+                },
+                { name: "Cart", src: cartIcon, path: "/cart" },
+                { name: "User", src: userIcon, path: "/under-construction" },
+              ].map((item, index) => (
+                <Link to={item.path} key={index}>
+                  <button className="p-1" key={item.name}>
+                    <img src={item.src} alt={item.name} className="w-8 h-8" />
+                  </button>
+                </Link>
               ))}
             </div>
           </div>
