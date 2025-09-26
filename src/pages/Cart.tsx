@@ -52,11 +52,13 @@ const Cart = () => {
                   className="flex items-center gap-6 max-md:gap-2"
                   key={product.id}
                 >
-                  <img
-                    src={product.url_image}
-                    alt={product.name}
-                    className="w-[90px]"
-                  />
+                  <Link to={`/product/${product.id}`}>
+                    <img
+                      src={product.url_image}
+                      alt={product.name}
+                      className="w-[90px]"
+                    />
+                  </Link>
                   <div className="flex max-md:flex-col items-center max-md:items-start gap-6 max-md:gap-2">
                     <div className="flex not-last:gap-4">
                       <div className="w-40 max-lg:w-fit text-start">

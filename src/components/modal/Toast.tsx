@@ -8,7 +8,7 @@ interface ToastProps {
   isError: boolean;
 }
 
-export function Toast({ id, message, onClose, duration = 5000, isError }: ToastProps) {
+export function Toast({ id, message, onClose, duration = 3000, isError }: ToastProps) {
   const [progress, setProgress] = useState(100);
 
   useEffect(() => {
