@@ -1,30 +1,45 @@
 import { Controller, useForm } from "react-hook-form";
 import CloseIcon from "../../assets/img/close.svg";
 import { PatternFormat } from "react-number-format";
+import { useGlobal } from "../../hooks/useGlobal";
+import { v4 as uuidv4 } from "uuid";
+import type { Address } from "../../models/Address";;
 
-type FormData = {
-  name: string;
-  address: string;
-  phone: string;
-  type: string;
-};
-
-const AddressForm = ({ handleClose }: any) => {
+const AddressForm = ({ handleClose, editAddressId = {} }: any) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<FormData>();
+  } = useForm<Address>();
 
-  const onSubmit = (data: FormData) => {
-    // colocar no context api
+  const { addresses, addAddress, updateAddress } = useGlobal();
+
+  const editAddress: Address = addresses.filter(
+    (address) => address.id === editAddressId
+  )[0];
+
+  const onSubmit = (data: Address) => {
+    if (editAddressId) {
+      updateAddress({ ...data, id: editAddressId });
+      console.log("entrou no update", data);
+    } else {
+      const newAddress: Address = {
+        ...data,
+        id: uuidv4(),
+      };
+      addAddress(newAddress);
+    }
+    handleClose();
     console.log(data);
   };
 
   return (
     <div className="flex flex-col gap-4 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] trans bg-white p-8 w-full max-w-[500px] max-md:max-w-80 rounded shadow-2xl z-50">
-      <button className="absolute top-2 right-2 cursor-pointer" onClick={() => handleClose()}>
+      <button
+        className="absolute top-2 right-2 cursor-pointer"
+        onClick={() => handleClose()}
+      >
         <img src={CloseIcon} alt="close icon" />
       </button>
       <h1 className="font-semibold text-xl pb-4">Insert your new address</h1>
@@ -38,6 +53,7 @@ const AddressForm = ({ handleClose }: any) => {
           placeholder="type your street name"
           className="p-4 border-1 border-[#9F9F9F] rounded-[7px] outline-0"
           {...register("name", { required: "Street name is required." })}
+          defaultValue={editAddress?.name}
         />
         <p className="text-red-700">{errors.name?.message}</p>
         <label htmlFor="address" className="font-medium text-sm">
@@ -49,14 +65,16 @@ const AddressForm = ({ handleClose }: any) => {
           placeholder="type your hole address"
           className="p-4 border-1 border-[#9F9F9F] rounded-[7px] outline-0"
           {...register("address", { required: "Address is required." })}
+          defaultValue={editAddress?.address}
         />
         <p className="text-red-700">{errors.address?.message}</p>
         <label htmlFor="phone" className="font-medium text-sm">
           Phone *
         </label>
         <Controller
-          name="phone"
+          name="contact"
           control={control}
+          defaultValue={editAddress?.contact || ""}
           rules={{
             required: "Phone is required",
             validate: (value) =>
@@ -74,28 +92,43 @@ const AddressForm = ({ handleClose }: any) => {
           )}
         />
 
-        <p className="text-red-700">{errors.phone?.message}</p>
-        <h2 className="font-medium text-[18px] pb-4">Select your address type</h2>
+        <p className="text-red-700">{errors.contact?.message}</p>
+        <h2 className="font-medium text-[18px] pb-4">
+          Select your address type
+        </h2>
         <div className="flex gap-4 pb-2">
           <label className="flex items-center">
             <input
               type="radio"
               value="home"
-              {...register("type", { required: "Select one option" })}
+              {...register("tag", { required: "Select one option" })}
               className="accent-black w-4 h-4 cursor-pointer"
+              defaultChecked={editAddress?.tag === "home" && true}
             />
             <span className="pl-2">Home</span>
           </label>
           <label className="flex items-center">
-            <input type="radio" value="office" {...register("type")} className="accent-black w-4 h-4 cursor-pointer" />
+            <input
+              type="radio"
+              value="office"
+              {...register("tag")}
+              className="accent-black w-4 h-4 cursor-pointer"
+              defaultChecked={editAddress?.tag === "office" && true}
+            />
             <span className="pl-2">Office</span>
           </label>
           <label className="flex items-center">
-            <input type="radio" value="other" {...register("type")} className="accent-black w-4 h-4 cursor-pointer"/>
+            <input
+              type="radio"
+              value="other"
+              {...register("tag")}
+              className="accent-black w-4 h-4 cursor-pointer"
+              defaultChecked={editAddress?.tag === "other" && true}
+            />
             <span className="pl-2">Other</span>
           </label>
         </div>
-        <p className="text-red-700">{errors.type?.message}</p>
+        <p className="text-red-700">{errors.tag?.message}</p>
 
         <button
           type="submit"
@@ -103,7 +136,6 @@ const AddressForm = ({ handleClose }: any) => {
         >
           <span className="font-semibold">Save</span>
         </button>
-        {/* <button>teste</button> */}
       </form>
     </div>
   );

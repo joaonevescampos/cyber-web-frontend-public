@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
-import { useCart } from "../hooks/useCart";
 import closeIcon from "../assets/img/close.svg";
 import type { CartItem } from "../models/Cart";
 import { Link } from "react-router-dom";
+import { useGlobal } from "../hooks/useGlobal";
 
 const Cart = () => {
   const [subtotal, setSubtotal] = useState(0);
   const tax = subtotal == 0 ? 0 : 50;
   const shippingHandling = subtotal == 0 ? 0 : 29;
-  const { cart, removeFromCart, getProductsInCart, updateAmount } = useCart();
+  const { cart, removeFromCart, getProductsInCart, updateAmount } = useGlobal();
 
   const sumProductsPrices = (cart: CartItem[]) => {
     const sumPrices = cart.reduce((acc, current) => {
@@ -47,7 +47,7 @@ const Cart = () => {
           <h1 className=" font-semibold text-2xl ">Shopping Cart</h1>
           <div className="flex flex-col gap-10 max-h-[536px] overflow-y-auto">
             {cart.length > 0 ? (
-              cart.map((product) => (
+              cart.map((product : CartItem) => (
                 <div
                   className="flex items-center gap-6 max-md:gap-2"
                   key={product.id}

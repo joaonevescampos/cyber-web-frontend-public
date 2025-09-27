@@ -1,11 +1,11 @@
 import AppRoutes from "./AppRoutes";
-import { CartProvider } from "./context/CartProvider";
+import { GlobalProvider } from "./context/GlobalProvider";
 
 function App() {
   return (
-    <CartProvider>
+    <GlobalProvider>
       <AppRoutes />
-    </CartProvider>
+    </GlobalProvider>
   );
 }
 

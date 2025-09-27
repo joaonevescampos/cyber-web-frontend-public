@@ -1,53 +1,33 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import EditIcon from "../../assets/img/edit-icon.svg";
 import CloseIcon from "../../assets/img/close_icon.svg";
 import PlusIcon from "../../assets/img/plus-icon.svg";
 import AddressForm from "../modal/AddressForm";
 import { useToast } from "../../hooks/useToast";
 import { ToastContainer } from "../modal/ToastContainer";
-
-interface AddressType {
-  id: number;
-  name: string;
-  address: string;
-  contact: string;
-  tag: string;
-}
-
-const defaultAdresses = [
-  {
-    id: 1,
-    name: "2118 Thornridge",
-    address: "2118 Thornridge Cir. Syracuse, Connecticut 35624",
-    contact: "2095550104",
-    tag: "home",
-  },
-  {
-    id: 2,
-    name: "Headoffice",
-    address: "2715 Ash Dr. San Jose, South Dakota 83475",
-    contact: "7045550127",
-    tag: "office",
-  },
-];
+import type { Address } from "../../models/Address";
+import { useGlobal } from "../../hooks/useGlobal";
 
 const Address = () => {
-  const [selectedId, setSelectedId] = useState(1);
-  const [addresses, setAddresses] = useState<AddressType[]>(defaultAdresses);
+  const [selectedId, setSelectedId] = useState("1");
   const [openAddressForm, setOpenAddressForm] = useState<boolean>(false);
+  const [editAddressId, setEditAddressId] = useState<string>("");
+
   const { errorToasts, addToast, removeErrorToast } = useToast();
 
-  const handleSelectAddress = (id: number) => {
+  const { addresses, removeAddress } = useGlobal();
+
+  const handleSelectAddress = (id: string) => {
     setSelectedId(id);
   };
 
-  const handleRemoveAddress = (id: number) => {
+  const handleRemoveAddress = (id: string) => {
     if (addresses.length > 1) {
       const addressesUpdated = addresses.filter((address) => address.id !== id);
       if (selectedId === id) {
         setSelectedId(addressesUpdated[0].id);
       }
-      setAddresses(addressesUpdated);
+      removeAddress(id);
     } else {
       addToast("Cannot delete a unique address!", true, 3000);
     }
@@ -55,6 +35,12 @@ const Address = () => {
 
   const handleOpenAddress = () => {
     setOpenAddressForm(true);
+    setEditAddressId("");
+  };
+
+  const handleEditAddress = (id: string) => {
+    setOpenAddressForm(true);
+    setEditAddressId(id);
   };
 
   const handleCloseAddress = () => {
@@ -73,7 +59,7 @@ const Address = () => {
       )}
       <h1 className="font-semibold text-xl">Select Address</h1>
       <ul className="flex flex-col gap-6">
-        {addresses.length > 0 ? (
+        {addresses?.length > 0 ? (
           addresses.map((address) => (
             <li
               className="flex gap-4 justify-between items-center p-6 bg-[#F6F6F6]"
@@ -102,7 +88,10 @@ const Address = () => {
                 </div>
               </div>
               <div className="flex gap-6">
-                <button className="cursor-pointer" onClick={() => handleOpenAddress()}>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => handleEditAddress(address.id)}
+                >
                   <img src={EditIcon} alt="edit icon" />
                 </button>
                 <button
@@ -122,14 +111,22 @@ const Address = () => {
         <div className="relative my-12">
           <hr className="border-dashed opacity-30" />
           <div className="absolute top-[-12px] left-1/2 translate-x-[-50%] flex flex-col items-center gap-2">
-            <button onClick={() => handleOpenAddress()} className="cursor-pointer">
-              <img src={PlusIcon} alt="plus icon"/>
+            <button
+              onClick={() => handleOpenAddress()}
+              className="cursor-pointer"
+            >
+              <img src={PlusIcon} alt="plus icon" />
             </button>
             <span>Add New Address</span>
           </div>
         </div>
       </ul>
-      {openAddressForm && <AddressForm handleClose={handleCloseAddress} />}
+      {openAddressForm && (
+        <AddressForm
+          editAddressId={editAddressId}
+          handleClose={handleCloseAddress}
+        />
+      )}
     </section>
   );
 };
