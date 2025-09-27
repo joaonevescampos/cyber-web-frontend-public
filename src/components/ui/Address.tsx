@@ -57,9 +57,9 @@ const Address = () => {
     setOpenAddressForm(true);
   };
 
-  useEffect(() => {
-    handleOpenAddress();
-  }, [openAddressForm]);
+  const handleCloseAddress = () => {
+    setOpenAddressForm(false);
+  };
 
   return (
     <section className="flex flex-col gap-8 max-w-[1120px] m-auto py-12">
@@ -68,6 +68,9 @@ const Address = () => {
         removeToast={removeErrorToast}
         isError={true}
       />
+      {openAddressForm && (
+        <div className="fixed inset-0 top-0 left-0 bg-black opacity-40 z-40"></div>
+      )}
       <h1 className="font-semibold text-xl">Select Address</h1>
       <ul className="flex flex-col gap-6">
         {addresses.length > 0 ? (
@@ -99,7 +102,7 @@ const Address = () => {
                 </div>
               </div>
               <div className="flex gap-6">
-                <button className="cursor-pointer">
+                <button className="cursor-pointer" onClick={() => handleOpenAddress()}>
                   <img src={EditIcon} alt="edit icon" />
                 </button>
                 <button
@@ -117,16 +120,16 @@ const Address = () => {
           </p>
         )}
         <div className="relative my-12">
-          <hr className="border-dashed opacity-40" />
+          <hr className="border-dashed opacity-30" />
           <div className="absolute top-[-12px] left-1/2 translate-x-[-50%] flex flex-col items-center gap-2">
-            <button onClick={() => handleOpenAddress()}>
-              <img src={PlusIcon} alt="plus icon" />
+            <button onClick={() => handleOpenAddress()} className="cursor-pointer">
+              <img src={PlusIcon} alt="plus icon"/>
             </button>
             <span>Add New Address</span>
           </div>
         </div>
       </ul>
-      {openAddressForm ?? <AddressForm />}
+      {openAddressForm && <AddressForm handleClose={handleCloseAddress} />}
     </section>
   );
 };
