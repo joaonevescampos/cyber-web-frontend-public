@@ -3,7 +3,7 @@ import CloseIcon from "../../assets/img/close.svg";
 import { PatternFormat } from "react-number-format";
 import { useGlobal } from "../../hooks/useGlobal";
 import { v4 as uuidv4 } from "uuid";
-import type { Address } from "../../models/Address";;
+import type { AddressType } from "../../models/AddressType";
 
 const AddressForm = ({ handleClose, editAddressId = {} }: any) => {
   const {
@@ -11,20 +11,20 @@ const AddressForm = ({ handleClose, editAddressId = {} }: any) => {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<Address>();
+  } = useForm<AddressType>();
 
   const { addresses, addAddress, updateAddress } = useGlobal();
 
-  const editAddress: Address = addresses.filter(
+  const editAddress: AddressType = addresses.filter(
     (address) => address.id === editAddressId
   )[0];
 
-  const onSubmit = (data: Address) => {
+  const onSubmit = (data: AddressType) => {
     if (editAddressId) {
       updateAddress({ ...data, id: editAddressId });
       console.log("entrou no update", data);
     } else {
-      const newAddress: Address = {
+      const newAddress: AddressType = {
         ...data,
         id: uuidv4(),
       };

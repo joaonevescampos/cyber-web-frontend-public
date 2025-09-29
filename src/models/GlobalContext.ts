@@ -1,4 +1,4 @@
-import type { Address } from "./Address";
+import type { AddressType } from "./AddressType";
 import type { CartItem } from "./Cart";
 
 export interface GlobalContextType {
@@ -6,10 +6,10 @@ export interface GlobalContextType {
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: number) => void;
   getProductsInCart: () => CartItem[];
-  updateAmount: (id: number, amount: number) => CartItem[]
-  addresses: Address[];
-  addAddress : (item: Address) => void;
-  removeAddress : (id: string) => void;
-  getAddresses : () => Address[];
-  updateAddress : (address: Address) => void
-};
+  updateAmount: (id: number, amount: number) => CartItem[];
+  addresses: AddressType[];
+  addAddress: (item: AddressType) => void;
+  removeAddress: (id: string) => void;
+  getAddresses: () => AddressType[];
+  updateAddress: (address: AddressType) => void;
+}

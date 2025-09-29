@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { CartItem } from "../models/Cart";
 import type { GlobalContextType } from "../models/GlobalContext";
-import type { Address } from "../models/Address";
+import type { AddressType } from "../models/AddressType";
 
 export const GlobalContext = createContext<GlobalContextType | undefined>(
   undefined
@@ -48,7 +48,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Address
-  const defaultAdresses: Address[] = [
+  const defaultAdresses: AddressType[] = [
     {
       id: "1",
       name: "2118 Thornridge",
@@ -66,7 +66,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   ];
 
   const storedAddress = localStorage.getItem("address");
-  const [addresses, setAddress] = useState<Address[]>(
+  const [addresses, setAddress] = useState<AddressType[]>(
     storedAddress && JSON.parse(storedAddress)
   );
 
@@ -77,11 +77,11 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const parsedAddress: Address[] = storedAddress
+  const parsedAddress: AddressType[] = storedAddress
     ? JSON.parse(storedAddress)
     : [defaultAdresses];
 
-  const addAddress = (item: Address) => {
+  const addAddress = (item: AddressType) => {
     const updatedAddress = [...parsedAddress, item];
     setAddress(updatedAddress);
     localStorage.setItem("address", JSON.stringify(updatedAddress));
@@ -98,9 +98,9 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setAddress(updatedAddress);
   };
 
-  const updateAddress = (addressToUpdate: Address): void => {
+  const updateAddress = (addressToUpdate: AddressType): void => {
     console.log("o que recebo: ", addressToUpdate);
-    const updatedAddress: Address[] = parsedAddress.map((address) => {
+    const updatedAddress: AddressType[] = parsedAddress.map((address) => {
       if (address.id == addressToUpdate.id) {
         return { ...addressToUpdate };
       }
