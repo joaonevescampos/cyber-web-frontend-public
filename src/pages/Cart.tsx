@@ -5,12 +5,20 @@ import closeIcon from "../assets/img/close.svg";
 import type { CartItem } from "../models/Cart";
 import { Link } from "react-router-dom";
 import { useGlobal } from "../hooks/useGlobal";
+import type { Summary } from "../models/Summary";
 
 const Cart = () => {
-  const [subtotal, setSubtotal] = useState(0);
+  const {
+    cart,
+    removeFromCart,
+    getProductsInCart,
+    updateAmount,
+    storeSummary,
+    summary,
+  } = useGlobal();
+  const [subtotal, setSubtotal] = useState(summary.subtotal);
   const tax = subtotal == 0 ? 0 : 50;
   const shippingHandling = subtotal == 0 ? 0 : 29;
-  const { cart, removeFromCart, getProductsInCart, updateAmount } = useGlobal();
 
   const sumProductsPrices = (cart: CartItem[]) => {
     const sumPrices = cart.reduce((acc, current) => {
@@ -18,6 +26,16 @@ const Cart = () => {
     }, 0);
     setSubtotal(sumPrices);
   };
+
+  useEffect(() => {
+    const summaryUpdated: Summary = {
+      subtotal,
+      estimatedTax: tax,
+      estimatedShip: shippingHandling,
+      total: subtotal + tax + shippingHandling,
+    };
+    storeSummary(summaryUpdated);
+  }, [subtotal]);
 
   const decreaseAmount = (id: number, currentAmount: number) => {
     if (currentAmount === 1) {
@@ -47,7 +65,7 @@ const Cart = () => {
           <h1 className=" font-semibold text-2xl ">Shopping Cart</h1>
           <div className="flex flex-col gap-10 max-h-[536px] overflow-y-auto">
             {cart.length > 0 ? (
-              cart.map((product : CartItem) => (
+              cart.map((product: CartItem) => (
                 <div
                   className="flex items-center gap-6 max-md:gap-2"
                   key={product.id}

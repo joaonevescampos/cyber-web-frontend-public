@@ -4,4 +4,5 @@ export interface AddressType {
   address: string;
   contact: string;
   tag: string;
+  selected: boolean;
 }

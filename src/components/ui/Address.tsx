@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditIcon from "../../assets/img/edit-icon.svg";
 import CloseIcon from "../../assets/img/close_icon.svg";
 import PlusIcon from "../../assets/img/plus-icon.svg";
@@ -8,23 +8,43 @@ import { ToastContainer } from "../modal/ToastContainer";
 import { useGlobal } from "../../hooks/useGlobal";
 
 const Address = () => {
-  const { addresses, removeAddress } = useGlobal();
+  const { addresses, removeAddress, updateAllAddresses, getAddresses } =
+    useGlobal();
   const [selectedId, setSelectedId] = useState(addresses[0].id);
   const [openAddressForm, setOpenAddressForm] = useState<boolean>(false);
   const [editAddressId, setEditAddressId] = useState<string>("");
 
   const { errorToasts, addToast, removeErrorToast } = useToast();
 
+  useEffect(() => {
+    getAddresses()
+  }, [])
 
   const handleSelectAddress = (id: string) => {
+    const updatedAddresses = addresses.map((address) => {
+      if (address.id === id) {
+        return { ...address, selected: true };
+      }
+      return { ...address, selected: false };
+    });
+
+    updateAllAddresses(updatedAddresses);
+
     setSelectedId(id);
   };
 
   const handleRemoveAddress = (id: string) => {
     if (addresses.length > 1) {
+
       const addressesUpdated = addresses.filter((address) => address.id !== id);
       if (selectedId === id) {
         setSelectedId(addressesUpdated[0].id);
+        addresses.map((address, index) => {
+          if (index === 0) {
+            return { ...address, selected: true };
+          }
+          return { ...address, selected: false };
+        });
       }
       removeAddress(id);
     } else {
@@ -69,7 +89,7 @@ const Address = () => {
                   onClick={() => handleSelectAddress(address.id)}
                   className="flex items-center justify-center w-6 h-6 rounded-full border-2 cursor-pointer"
                 >
-                  {selectedId == address.id ? (
+                  {address.selected ? (
                     <div className="w-3 h-3 rounded-full bg-black "></div>
                   ) : (
                     <div></div>

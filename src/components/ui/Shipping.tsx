@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import type { ShippingType } from "../../models/ShippingType";
+import { useGlobal } from "../../hooks/useGlobal";
 
 const Shipping = () => {
+  const { shippingSelected, storeshippingSelected, getshippingSelected} = useGlobal()
   const [selectedId, setSelectedId] = useState<string>("1");
   const [shippingArray, setShippingArray] = useState<ShippingType[]>([
     {
@@ -26,8 +28,25 @@ const Shipping = () => {
     },
   ]);
 
+  useEffect(() => {
+    getshippingSelected()
+    setSelectedId(shippingSelected.id)
+  }, [])
+
   const handleSelectshipping = (id: string) => {
     setSelectedId(id);
+
+    const updateShipping = shippingArray.map(shipping => {
+      if(shipping.id == id) {
+        return {...shipping, selected: true}
+      }
+      return {...shipping, selected: false}
+    })
+    setShippingArray(updateShipping)
+
+    const selectedShipping : ShippingType = updateShipping.filter(shipping => shipping.id === id)[0]
+
+    storeshippingSelected(selectedShipping)
   };
 
   useEffect(() => {
@@ -56,7 +75,7 @@ const Shipping = () => {
                   onClick={() => handleSelectshipping(shipping.id)}
                   className="flex items-center justify-center w-6 h-6 rounded-full border-2 cursor-pointer"
                 >
-                  {selectedId == shipping.id ? (
+                  {shipping.id === shippingSelected.id ? (
                     <div className="w-3 h-3 rounded-full bg-black "></div>
                   ) : (
                     <div></div>
@@ -65,14 +84,14 @@ const Shipping = () => {
 
                 <span
                   className={`font-medium max-w-[500px] max-md:max-w-40 ${
-                    !shipping.selected && "opacity-40"
+                    shippingSelected.id !== shipping.id && "opacity-40"
                   }`}
                 >
                   {shipping.value}
                 </span>
                 <span
                   className={`text-[#17183B] max-w-[500px]  ${
-                    !shipping.selected && "opacity-40"
+                    shippingSelected.id !== shipping.id && "opacity-40"
                   } ${shippingArray[2].id == shipping.id ? "max-md:max-w-none" : "max-md:max-w-40"}`}
                 >
                   {shipping.description}
@@ -80,7 +99,7 @@ const Shipping = () => {
               </div>
               <span
                 className={`text-[#17183B] ${
-                  !shipping.selected && "opacity-40"
+                  shippingSelected.id !== shipping.id && "opacity-40"
                 }`}
               >
                 {shipping.date}

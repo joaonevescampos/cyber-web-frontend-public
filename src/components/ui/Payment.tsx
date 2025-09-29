@@ -1,12 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useGlobal } from "../../hooks/useGlobal";
 import creditCard from "../../assets/img/credit-card.png";
 import { Controller, useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import type { PaymentType } from "../../models/PaymentType";
+import type { AddressType } from "../../models/AddressType";
 
 const Payment = () => {
-  const { cart, getProductsInCart } = useGlobal();
+  const [addressSelected, setAddressSelected] = useState<AddressType>();
+  const {
+    cart,
+    getProductsInCart,
+    addresses,
+    getAddresses,
+    summary,
+    getSummary,
+    shippingSelected
+  } = useGlobal();
+
   const {
     register,
     handleSubmit,
@@ -16,7 +27,16 @@ const Payment = () => {
 
   useEffect(() => {
     getProductsInCart();
+    getSummary();
+    getAddresses();
   }, []);
+
+  useEffect(() => {
+    const addressSelectedFilter = addresses.filter(
+      (address) => address.selected === true
+    )[0];
+    setAddressSelected(addressSelectedFilter);
+  }, [addresses]);
 
   const onSubmit = (data: PaymentType) => {
     console.log(data);
@@ -45,29 +65,29 @@ const Payment = () => {
         </ul>
         <div>
           <h3 className="text-[#545454] text-sm font-medium">Address</h3>
-          <span>1131 Dusty Townline, Jacksonville, TX 40322</span>
+          <span>{addressSelected?.address}</span>
         </div>
         <div>
           <h3 className="text-[#545454] text-sm font-medium">
             Shipping Method
           </h3>
-          <span>Free</span>
+          <span>{shippingSelected.value}</span>
         </div>
         <strong className="flex justify-between font-medium">
           <span>Subtotal</span>
-          <span>$2347</span>
+          <span>${summary.subtotal}</span>
         </strong>
         <div className="flex justify-between">
           <span className="text-[#545454]">Estimated Tax</span>
-          <span>$50</span>
+          <span>${summary.estimatedTax}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-[#545454]">Estimated shipping & Handling</span>
-          <span>$29</span>
+          <span>{summary.estimatedShip}</span>
         </div>
         <div className="flex justify-between">
           <span className="font-medium">Total</span>
-          <span className="font-bold">$2426</span>
+          <span className="font-bold">${summary.total}</span>
         </div>
       </div>
       {/* Payment  */}
@@ -93,7 +113,7 @@ const Payment = () => {
           />
           <p className="text-red-700">{errors.name?.message}</p>
           <input
-            type="text"
+            type="number"
             id="cardNumber"
             placeholder="Card Number"
             className="p-4 border-1 border-[#CECECE] rounded-[7px] outline-0 w-full"
@@ -105,7 +125,7 @@ const Payment = () => {
           <div className="flex gap-4">
             <div>
               <input
-                type="text"
+                type="number"
                 id="expDate"
                 placeholder="Exp. Date"
                 className="p-4 border-1 border-[#CECECE] rounded-[7px] outline-0 w-full"
