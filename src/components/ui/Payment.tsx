@@ -23,19 +23,19 @@ const Payment = () => {
   };
 
   return (
-    <div className="flex gap-24">
+    <div className="flex gap-24 max-lg:flex-col max-lg:w-fit max-lg:m-auto">
       {/* summary  */}
-      <div className="flex flex-col gap-6 flex-1 max-w-[512px] box-border p-8 border-1 border-[#EBEBEB] rounded-[10px]">
+      <div className="flex flex-col gap-6 flex-1 max-w-[512px] box-border p-8 max-md:p-4 border-1 border-[#EBEBEB] rounded-[10px]">
         <h2 className="font-medium text-xl">Summary</h2>
         <ul className="flex flex-col gap-4">
           {cart.map((product) => (
-            <li className="flex gap-4 items-center p-4 bg-[#F6F6F6] rounded-[13px]">
+            <li className="flex gap-4 max-md:justify-between items-center p-4 bg-[#F6F6F6] rounded-[13px]">
               <img
                 src={product.url_image}
                 alt={product.name}
                 className="w-10"
               />
-              <span className="truncate w-[300px] font-medium">
+              <span className="truncate w-[300px] max-md:w-[120px] max-md:text-sm font-medium">
                 {product.name}
               </span>
               <span className="text-xs opacity-60">x{product.amount}</span>
@@ -71,14 +71,18 @@ const Payment = () => {
         </div>
       </div>
       {/* Payment  */}
-      <div className="flex flex-col gap-6 flex-1 max-w-[512px]">
+      <div className="flex flex-col gap-6 flex-1 w-full max-w-[512px]">
         <h2 className="font-bold text-xl">Payment</h2>
-        <nav className="flex items-center gap-14">
+        <nav className="flex items-center gap-14 max-md:gap-10 text-sm">
           <span className="border-b-1 h-8">Credit Card</span>
           <span className="text-[#717171] h-8">Pay Pal</span>
           <span className="text-[#717171] h-8">Pay Pal Credit</span>
         </nav>
-        <img src={creditCard} alt="credit card" className="w-[337px]" />
+        <img
+          src={creditCard}
+          alt="credit card"
+          className="w-[337px] max-md:m-auto"
+        />
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
           <input
             type="text"
@@ -123,7 +127,13 @@ const Payment = () => {
             </div>
           </div>
           <div className="flex gap-2 items-center pt-4">
-            <input type="checkbox" className="bg-black" />
+            <input
+              type="checkbox"
+              className="h-5 w-5 appearance-none rounded border border-gray-400 
+             checked:bg-black checked:border-black 
+             checked:after:content-['✓'] checked:after:text-white 
+             checked:after:block checked:after:text-center checked:after:leading-4"
+            />
             <span>Same as billing address</span>
           </div>
         </form>

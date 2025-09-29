@@ -66,8 +66,8 @@ const Steps = () => {
   return (
     <>
       <Header />
-      <main className="mt-[88px] max-w-[1120px] m-auto">
-        <div className="flex justify-between py-18">
+      <main className="mt-[88px] max-w-[1120px] m-auto px-4 box-content">
+        <div className="flex justify-between py-18 max-md:m-auto">
           {steps.map((step, index) => (
             <div
               key={index}
@@ -76,7 +76,7 @@ const Steps = () => {
               <img src={step.icon} alt={step.name} />
               <div className="flex flex-col">
                 <span className="text-sm font-medium">{step.step}</span>
-                <span className="text-[19px] font-medium">{step.name}</span>
+                <span className="text-[19px] max-md:text-sm font-medium">{step.name}</span>
               </div>
             </div>
           ))}
@@ -96,7 +96,7 @@ const Steps = () => {
             <Payment />
           </section>
         )}
-        <div className="flex gap-6 justify-end pb-12">
+        <div className="flex gap-6 justify-end max-lg:justify-center max-lg:pt-4 pb-12">
           <button
             onClick={goBack}
             className={`flex items-center justify-center transparent hover:bg-gray-1 transition duration-300 text-black border-1 cursor-pointer rounded-[6px] h-16 w-52 ${steps[2].active && "w-61"}`}

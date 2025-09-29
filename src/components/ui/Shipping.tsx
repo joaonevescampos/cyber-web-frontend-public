@@ -37,13 +37,12 @@ const Shipping = () => {
       }
       return { ...shipping, selected: false };
     });
-    
-    setShippingArray(updatedShipping);
 
+    setShippingArray(updatedShipping);
   }, [selectedId]);
 
   return (
-    <section className="flex flex-col gap-8 max-w-[1120px] m-auto max-lg:px-4 py-12">
+    <section className="flex flex-col gap-8 max-w-[1120px] m-auto py-12">
       <h1 className="font-semibold text-xl">Shipment Method</h1>
       <ul className="flex flex-col gap-6">
         {shippingArray.map((shipping) => (
@@ -51,8 +50,8 @@ const Shipping = () => {
             className="flex items-center p-6 border-[#D1D1D8] border-1 rounded-[11px] w-full"
             key={shipping.id}
           >
-            <div className="flex justify-between gap-4 w-full">
-              <div className="flex gap-4">
+            <div className="flex max-md:items-center justify-between gap-4 w-full">
+              <div className="flex max-md:flex-col gap-4">
                 <div
                   onClick={() => handleSelectshipping(shipping.id)}
                   className="flex items-center justify-center w-6 h-6 rounded-full border-2 cursor-pointer"
@@ -63,17 +62,18 @@ const Shipping = () => {
                     <div></div>
                   )}
                 </div>
+
                 <span
-                  className={`font-medium truncate max-w-[500px] max-md:max-w-40 ${
+                  className={`font-medium max-w-[500px] max-md:max-w-40 ${
                     !shipping.selected && "opacity-40"
                   }`}
                 >
                   {shipping.value}
                 </span>
                 <span
-                  className={`text-[#17183B] truncate max-w-[500px] max-md:max-w-40 ${
+                  className={`text-[#17183B] max-w-[500px]  ${
                     !shipping.selected && "opacity-40"
-                  }`}
+                  } ${shippingArray[2].id == shipping.id ? "max-md:max-w-none" : "max-md:max-w-40"}`}
                 >
                   {shipping.description}
                 </span>
