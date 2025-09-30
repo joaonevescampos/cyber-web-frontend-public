@@ -11,7 +11,6 @@ export const GlobalContext = createContext<GlobalContextType | undefined>(
 );
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
-  // Cart
   const [cart, setCart] = useState<CartItem[]>([]);
   const storedCart = localStorage.getItem("cart");
   const parsedCart: CartItem[] = storedCart ? JSON.parse(storedCart) : [];
@@ -49,7 +48,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     return updatedCart;
   };
 
-  // Address
   const defaultAdresses: AddressType[] = [
     {
       id: "1",
@@ -97,7 +95,17 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeAddress = (id: string) => {
-    const updatedAddress = parsedAddress.filter((address) => address.id !== id);
+    const wasSelected = parsedAddress.find((a) => a.id === id)?.selected;
+
+    let updatedAddress = parsedAddress.filter((address) => address.id !== id);
+
+    if (wasSelected && updatedAddress.length > 0) {
+      updatedAddress = updatedAddress.map((addr, index) => ({
+        ...addr,
+        selected: index === 0,
+      }));
+    }
+
     localStorage.setItem("address", JSON.stringify(updatedAddress));
     setAddresses(updatedAddress);
   };
@@ -118,7 +126,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     setAddresses(addressesToUpdate);
   };
 
-  // Summary
   const [summary, setSummary] = useState<Summary>({
     subtotal: 0,
     estimatedTax: 50,
@@ -138,7 +145,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Shipping Method
   const [shippingSelected, setShippingSelected] = useState<ShippingType>({
     id: "1",
     value: "Free",

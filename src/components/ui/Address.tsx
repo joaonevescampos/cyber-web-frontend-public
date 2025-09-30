@@ -10,15 +10,14 @@ import { useGlobal } from "../../hooks/useGlobal";
 const Address = () => {
   const { addresses, removeAddress, updateAllAddresses, getAddresses } =
     useGlobal();
-  const [selectedId, setSelectedId] = useState(addresses[0].id);
   const [openAddressForm, setOpenAddressForm] = useState<boolean>(false);
   const [editAddressId, setEditAddressId] = useState<string>("");
 
   const { errorToasts, addToast, removeErrorToast } = useToast();
 
   useEffect(() => {
-    getAddresses()
-  }, [])
+    getAddresses();
+  }, []);
 
   const handleSelectAddress = (id: string) => {
     const updatedAddresses = addresses.map((address) => {
@@ -29,23 +28,10 @@ const Address = () => {
     });
 
     updateAllAddresses(updatedAddresses);
-
-    setSelectedId(id);
   };
 
   const handleRemoveAddress = (id: string) => {
     if (addresses.length > 1) {
-
-      const addressesUpdated = addresses.filter((address) => address.id !== id);
-      if (selectedId === id) {
-        setSelectedId(addressesUpdated[0].id);
-        addresses.map((address, index) => {
-          if (index === 0) {
-            return { ...address, selected: true };
-          }
-          return { ...address, selected: false };
-        });
-      }
       removeAddress(id);
     } else {
       addToast("Cannot delete a unique address!", true, 3000);
