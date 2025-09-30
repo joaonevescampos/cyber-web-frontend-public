@@ -187,7 +187,7 @@ const Payment = forwardRef((_, ref) => {
             className="p-4 border-1 border-[#CECECE] rounded-[7px] outline-0 w-full"
             {...register("name", { required: "Card name is required." })}
           />
-          <p className="text-red-700">{errors.name?.message}</p>
+          <p className="text-red-700 text-sm">{errors.name?.message}</p>
           <Controller
             name="cardNumber"
             control={control}
@@ -207,7 +207,7 @@ const Payment = forwardRef((_, ref) => {
               />
             )}
           />
-          <p className="text-red-700">{errors.cardNumber?.message}</p>
+          <p className="text-red-700 text-sm">{errors.cardNumber?.message}</p>
           <div className="flex gap-4">
             <div>
               <Controller
@@ -252,7 +252,7 @@ const Payment = forwardRef((_, ref) => {
                   />
                 )}
               />
-              <p className="text-red-700">{errors.expDate?.message}</p>
+              <p className="text-red-700 text-sm pt-2">{errors.expDate?.message}</p>
             </div>
             <div>
               <Controller
@@ -274,7 +274,7 @@ const Payment = forwardRef((_, ref) => {
                   />
                 )}
               />
-              <p className="text-red-700">{errors.cvv?.message}</p>
+              <p className="text-red-700 text-sm pt-2">{errors.cvv?.message}</p>
             </div>
           </div>
           <div className="flex gap-2 items-center pt-4">
