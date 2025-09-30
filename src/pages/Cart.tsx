@@ -122,7 +122,14 @@ const Cart = () => {
                 </div>
               ))
             ) : (
-              <p>There is no products in the cart</p>
+              <div className="flex flex-col gap-4">
+                <p>There is no products in the cart</p>
+                <Link to="/products/all">
+                  <button className="flex items-center justify-center bg-black hover:bg-gray-4 transition duration-300 text-white cursor-pointer rounded-[6px] h-[48px] w-48">
+                    <span className="font-semibold text-sm">Add products</span>
+                  </button>
+                </Link>
+              </div>
             )}
           </div>
         </section>
@@ -178,11 +185,22 @@ const Cart = () => {
                 <span>$ {subtotal + tax + shippingHandling}</span>
               </div>
             </div>
-            <Link to="/payment">
-              <button className="flex items-center justify-center bg-black hover:bg-gray-4 transition duration-300 text-white cursor-pointer rounded-[6px] h-[48px] w-full">
-                <span className="font-semibold">Checkout</span>
-              </button>
-            </Link>
+            {cart.length === 0 ? (
+              <div>
+                <button className="flex items-center justify-center bg-gray-500 transition duration-300 text-white rounded-[6px] h-[48px] w-full cursor-not-allowed">
+                  <span className="font-semibold">Checkout</span>
+                </button>
+                <p className=" text-sm text-red-700 pt-2">
+                  Your cart is empty. Add at least one product to proceed.
+                </p>
+              </div>
+            ) : (
+              <Link to="/payment">
+                <button className="flex items-center justify-center bg-black hover:bg-gray-4 transition duration-300 text-white cursor-pointer rounded-[6px] h-[48px] w-full">
+                  <span className="font-semibold">Checkout</span>
+                </button>
+              </Link>
+            )}
           </div>
         </section>
       </main>

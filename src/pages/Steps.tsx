@@ -101,7 +101,7 @@ const Steps = () => {
             <Payment ref={paymentRef} />
           </section>
         )}
-        <div className="flex gap-6 justify-end max-lg:justify-center max-lg:pt-4 pb-12">
+        <div className="flex gap-6 justify-end max-lg:justify-center max-lg:pt-4 pb-12 pt-4">
           <button
             onClick={goBack}
             className={`flex items-center justify-center transparent hover:bg-gray-1 transition duration-300 text-black border-1 cursor-pointer rounded-[6px] h-16 w-52 ${
