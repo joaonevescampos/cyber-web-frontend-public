@@ -7,12 +7,14 @@ import { PatternFormat } from "react-number-format";
 import type { PaymentType } from "../../models/PaymentType";
 import type { AddressType } from "../../models/AddressType";
 import { useAuth } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
+import SuccessPayment from "../modal/SuccessPayment";
+import ErrorPayment from "../modal/ErrorPayment";
 
 const Payment = forwardRef((props, ref) => {
   const [addressSelected, setAddressSelected] = useState<AddressType>();
   const { getToken, isLoaded, isSignedIn } = useAuth();
-  const navigate = useNavigate();
+  const [openSucess, setOpenSucess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   const {
     cart,
@@ -45,74 +47,95 @@ const Payment = forwardRef((props, ref) => {
   }, [addresses]);
 
   const onSubmit = async (data: PaymentType) => {
-  console.log("Form Data:", data);
+    console.log("Form Data:", data);
 
-  try {
-    // 1. Monta os produtos para enviar ao backend
-    const productsRequest = cart.map((product) => ({
-      productId: product.id,
-      quantity: product.amount,
-    }));
+    try {
+      // 1. Monta os produtos para enviar ao backend
+      const productsRequest = cart.map((product) => ({
+        productId: product.id,
+        quantity: product.amount,
+      }));
 
-    // 2. Pega o token do usuário
-    const token = await getToken();
+      // 2. Pega o token do usuário
+      const token = await getToken();
 
-    if (!token) {
-      throw new Error("User not authenticated");
+      if (!token) {
+        throw new Error("User not authenticated");
+      }
+      console.log("Token do Clerk:", token);
+
+      // 3. Cria o carrinho no backend
+      const createCartResponse = await fetch(
+        "http://localhost:3333/api/shopping_carts",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ products: productsRequest }),
+        }
+      );
+
+      if (!createCartResponse.ok) {
+        throw new Error("Failed to create shopping cart");
+      }
+
+      const createdCart = await createCartResponse.json();
+      const cartId = createdCart.shopping_cart_id;
+
+      // 4. Atualiza o status do carrinho para "finalizado"
+      const updateStatusResponse = await fetch(
+        `http://localhost:3333/api/shopping_carts/${cartId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: "finish" }),
+        }
+      );
+
+      if (!updateStatusResponse.ok) {
+        throw new Error("Failed to update cart status");
+      }
+
+      // 5. Navega para a página de confirmação
+      setOpenSucess(true);
+    } catch (error: any) {
+      setOpenError(true);
+      throw new Error(`Error: ${error}`)
+      // alert(error.message || "Something went wrong");
     }
-    console.log("Token do Clerk:", token);
-
-    // 3. Cria o carrinho no backend
-    const createCartResponse = await fetch("http://localhost:3333/api/shopping_carts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ products: productsRequest }),
-    });
-
-    if (!createCartResponse.ok) {
-      throw new Error("Failed to create shopping cart");
-    }
-
-    const createdCart = await createCartResponse.json();
-    const cartId = createdCart.shopping_cart_id;
-
-    // 4. Atualiza o status do carrinho para "finalizado"
-    const updateStatusResponse = await fetch(`http://localhost:3333/api/shopping_carts/${cartId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ status: "finish" }),
-    });
-
-    if (!updateStatusResponse.ok) {
-      throw new Error("Failed to update cart status");
-    }
-
-    // 5. Navega para a página de confirmação
-    navigate(`/checkout/confirm?cart=${cartId}`);
-  } catch (error: any) {
-    console.error(error);
-    alert(error.message || "Something went wrong");
-  }
-};
+  };
 
   useImperativeHandle(ref, () => ({
     submit: handleSubmit(onSubmit),
   }));
 
+  const handleCloseModal = () => {
+    setOpenSucess(false);
+    setOpenError(false);
+  };
+
   return (
     <div className="flex gap-24 max-lg:flex-col max-lg:w-fit max-lg:m-auto">
+      {openSucess || openError && (
+        <div className="fixed inset-0 top-0 left-0 bg-black opacity-40 z-40 w-full h-full"></div>
+      )}
+      {openSucess && (<SuccessPayment />)}
+      {openError && (<ErrorPayment handleClose={handleCloseModal}/>)}
+
       {/* summary  */}
       <div className="flex flex-col gap-6 flex-1 max-w-[512px] box-border p-8 max-md:p-4 border-1 border-[#EBEBEB] rounded-[10px]">
         <h2 className="font-medium text-xl">Summary</h2>
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-4 max-h-[250px] overflow-y-auto">
           {cart.map((product) => (
-            <li className="flex gap-4 max-md:justify-between items-center p-4 bg-[#F6F6F6] rounded-[13px]" key={product.id}>
+            <li
+              className="flex gap-4 max-md:justify-between items-center p-4 bg-[#F6F6F6] rounded-[13px]"
+              key={product.id}
+            >
               <img
                 src={product.url_image}
                 alt={product.name}
