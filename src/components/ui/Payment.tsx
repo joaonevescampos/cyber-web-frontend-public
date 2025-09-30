@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 import { useGlobal } from "../../hooks/useGlobal";
 import creditCard from "../../assets/img/credit-card.png";
 import { Controller, useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import type { PaymentType } from "../../models/PaymentType";
 import type { AddressType } from "../../models/AddressType";
+import { useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 
-const Payment = () => {
+const Payment = forwardRef((props, ref) => {
   const [addressSelected, setAddressSelected] = useState<AddressType>();
+  const { getToken, isLoaded, isSignedIn } = useAuth();
+  const navigate = useNavigate();
+
   const {
     cart,
     getProductsInCart,
@@ -15,7 +21,7 @@ const Payment = () => {
     getAddresses,
     summary,
     getSummary,
-    shippingSelected
+    shippingSelected,
   } = useGlobal();
 
   const {
@@ -38,9 +44,66 @@ const Payment = () => {
     setAddressSelected(addressSelectedFilter);
   }, [addresses]);
 
-  const onSubmit = (data: PaymentType) => {
-    console.log(data);
-  };
+  const onSubmit = async (data: PaymentType) => {
+  console.log("Form Data:", data);
+
+  try {
+    // 1. Monta os produtos para enviar ao backend
+    const productsRequest = cart.map((product) => ({
+      productId: product.id,
+      quantity: product.amount,
+    }));
+
+    // 2. Pega o token do usuário
+    const token = await getToken();
+
+    if (!token) {
+      throw new Error("User not authenticated");
+    }
+    console.log("Token do Clerk:", token);
+
+    // 3. Cria o carrinho no backend
+    const createCartResponse = await fetch("http://localhost:3333/api/shopping_carts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ products: productsRequest }),
+    });
+
+    if (!createCartResponse.ok) {
+      throw new Error("Failed to create shopping cart");
+    }
+
+    const createdCart = await createCartResponse.json();
+    const cartId = createdCart.shopping_cart_id;
+
+    // 4. Atualiza o status do carrinho para "finalizado"
+    const updateStatusResponse = await fetch(`http://localhost:3333/api/shopping_carts/${cartId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status: "finish" }),
+    });
+
+    if (!updateStatusResponse.ok) {
+      throw new Error("Failed to update cart status");
+    }
+
+    // 5. Navega para a página de confirmação
+    navigate(`/checkout/confirm?cart=${cartId}`);
+  } catch (error: any) {
+    console.error(error);
+    alert(error.message || "Something went wrong");
+  }
+};
+
+  useImperativeHandle(ref, () => ({
+    submit: handleSubmit(onSubmit),
+  }));
 
   return (
     <div className="flex gap-24 max-lg:flex-col max-lg:w-fit max-lg:m-auto">
@@ -49,7 +112,7 @@ const Payment = () => {
         <h2 className="font-medium text-xl">Summary</h2>
         <ul className="flex flex-col gap-4">
           {cart.map((product) => (
-            <li className="flex gap-4 max-md:justify-between items-center p-4 bg-[#F6F6F6] rounded-[13px]">
+            <li className="flex gap-4 max-md:justify-between items-center p-4 bg-[#F6F6F6] rounded-[13px]" key={product.id}>
               <img
                 src={product.url_image}
                 alt={product.name}
@@ -112,36 +175,91 @@ const Payment = () => {
             {...register("name", { required: "Card name is required." })}
           />
           <p className="text-red-700">{errors.name?.message}</p>
-          <input
-            type="number"
-            id="cardNumber"
-            placeholder="Card Number"
-            className="p-4 border-1 border-[#CECECE] rounded-[7px] outline-0 w-full"
-            {...register("cardNumber", {
-              required: "Card number is required.",
-            })}
+          <Controller
+            name="cardNumber"
+            control={control}
+            rules={{
+              required: "Card Number is required",
+              validate: (value) =>
+                value.replace(/\D/g, "").length === 16 ||
+                "Card Number must have 16 digits",
+            }}
+            render={({ field }) => (
+              <PatternFormat
+                {...field}
+                format="#### #### #### ####"
+                mask="_"
+                placeholder="Card Number"
+                className="p-4 border-1 border-[#9F9F9F] rounded-[7px] outline-0"
+              />
+            )}
           />
           <p className="text-red-700">{errors.cardNumber?.message}</p>
           <div className="flex gap-4">
             <div>
-              <input
-                type="number"
-                id="expDate"
-                placeholder="Exp. Date"
-                className="p-4 border-1 border-[#CECECE] rounded-[7px] outline-0 w-full"
-                {...register("expDate", {
-                  required: "Expiration date is required.",
-                })}
+              <Controller
+                name="expDate"
+                control={control}
+                rules={{
+                  required: "Expiration date is required",
+                  validate: (value) => {
+                    const cleaned = value.replace(/\D/g, "");
+                    if (cleaned.length !== 4) {
+                      return "Expiration date must have 4 digits";
+                    }
+
+                    const month = parseInt(cleaned.substring(0, 2), 10);
+                    const year = parseInt("20" + cleaned.substring(2), 10);
+
+                    if (month < 1 || month > 12) {
+                      return "Invalid month. Must be 1 to 12";
+                    }
+
+                    const now = new Date();
+                    const currentMonth = now.getMonth() + 1;
+                    const currentYear = now.getFullYear();
+
+                    if (
+                      year < currentYear ||
+                      (year === currentYear && month < currentMonth)
+                    ) {
+                      return "Expiration year must be in the future";
+                    }
+
+                    return true;
+                  },
+                }}
+                render={({ field }) => (
+                  <PatternFormat
+                    {...field}
+                    format="##/##"
+                    mask="_"
+                    placeholder="Exp. Date"
+                    className="p-4 border-1 border-[#9F9F9F] rounded-[7px] outline-0 w-full"
+                  />
+                )}
               />
               <p className="text-red-700">{errors.expDate?.message}</p>
             </div>
             <div>
-              <input
-                type="text"
-                id="cvv"
-                placeholder="CVV"
-                className="p-4 border-1 border-[#CECECE] rounded-[7px] outline-0 w-full"
-                {...register("name", { required: "Card CVV is required." })}
+              <Controller
+                name="cvv"
+                control={control}
+                rules={{
+                  required: "CVV is required",
+                  validate: (value) =>
+                    value.replace(/\D/g, "").length === 3 ||
+                    "CVV must have 3 digits",
+                }}
+                render={({ field }) => (
+                  <PatternFormat
+                    {...field}
+                    format="###"
+                    mask="_"
+                    placeholder="CVV"
+                    className="p-4 border-1 border-[#9F9F9F] rounded-[7px] outline-0 w-full"
+                  />
+                )}
               />
               <p className="text-red-700">{errors.cvv?.message}</p>
             </div>
@@ -156,10 +274,11 @@ const Payment = () => {
             />
             <span>Same as billing address</span>
           </div>
+          {/* No componente pai, terá um botão para enviar os dados para o backend. Como eu faço para passar o handleSubmit pra lá?  */}
         </form>
       </div>
     </div>
   );
-};
+});
 
 export default Payment;

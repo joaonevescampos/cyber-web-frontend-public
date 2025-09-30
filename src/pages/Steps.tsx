@@ -4,7 +4,7 @@ import Address from "../components/ui/Address";
 import localIcon from "../assets/img/location.svg";
 import shippingIcon from "../assets/img/shipping.svg";
 import paymentIcon from "../assets/img/payment.svg";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Shipping from "../components/ui/Shipping";
 import { useNavigate } from "react-router-dom";
 import Payment from "../components/ui/Payment";
@@ -22,7 +22,10 @@ const Steps = () => {
     { step: "step 2", name: "Shipping", icon: shippingIcon, active: false },
     { step: "step 3", name: "Payment", icon: paymentIcon, active: false },
   ]);
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
+
+  const paymentRef = useRef<{ submit: () => void }>(null);
 
   const goNext = () => {
     const currentIndex = steps.findIndex((step) => step.active);
@@ -48,7 +51,7 @@ const Steps = () => {
     const currentIndex = steps.findIndex((step) => step.active);
 
     if (currentIndex === 0) {
-      navigate("/cart")
+      navigate("/cart");
     }
 
     const updatedSteps = steps.map((step, index) => {
@@ -76,7 +79,9 @@ const Steps = () => {
               <img src={step.icon} alt={step.name} />
               <div className="flex flex-col">
                 <span className="text-sm font-medium">{step.step}</span>
-                <span className="text-[19px] max-md:text-sm font-medium">{step.name}</span>
+                <span className="text-[19px] max-md:text-sm font-medium">
+                  {step.name}
+                </span>
               </div>
             </div>
           ))}
@@ -93,24 +98,34 @@ const Steps = () => {
         )}
         {steps[2].active && (
           <section>
-            <Payment />
+            <Payment ref={paymentRef} />
           </section>
         )}
         <div className="flex gap-6 justify-end max-lg:justify-center max-lg:pt-4 pb-12">
           <button
             onClick={goBack}
-            className={`flex items-center justify-center transparent hover:bg-gray-1 transition duration-300 text-black border-1 cursor-pointer rounded-[6px] h-16 w-52 ${steps[2].active && "w-61"}`}
+            className={`flex items-center justify-center transparent hover:bg-gray-1 transition duration-300 text-black border-1 cursor-pointer rounded-[6px] h-16 w-52 ${
+              steps[2].active && "w-61"
+            }`}
           >
             <span className="font-semibold">Back</span>
           </button>
-          <button
-            onClick={goNext}
-            className={`flex items-center justify-center bg-black hover:bg-gray-4 transition duration-300 text-white cursor-pointer rounded-[6px] h-16 w-52 ${steps[2].active && "w-61"}`}
-          >
-            <span className="font-semibold">
-              {steps[2].active ? "Pay" : "Next"}
-            </span>
-          </button>
+
+          {steps[2].active ? (
+            <button
+              onClick={() => paymentRef.current?.submit()}
+              className="flex items-center justify-center bg-black hover:bg-gray-4 transition duration-300 text-white cursor-pointer rounded-[6px] h-16 w-61"
+            >
+              <span className="font-semibold">Pay</span>
+            </button>
+          ) : (
+            <button
+              onClick={goNext}
+              className="flex items-center justify-center bg-black hover:bg-gray-4 transition duration-300 text-white cursor-pointer rounded-[6px] h-16 w-52"
+            >
+              <span className="font-semibold">Next</span>
+            </button>
+          )}
         </div>
       </main>
       <Footer />
