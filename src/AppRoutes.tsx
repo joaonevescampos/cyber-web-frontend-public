@@ -27,8 +27,6 @@ const AppRoutes = () => {
         />
         <Route path="/sign-in" element={<SignInPage />} />
 
-
-        {/* Protected Routes */}
         <Route
           path="/payment"
           element={

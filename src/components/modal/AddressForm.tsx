@@ -21,17 +21,20 @@ const AddressForm = ({ handleClose, editAddressId = {} }: any) => {
 
   const onSubmit = (data: AddressType) => {
     if (editAddressId) {
-      updateAddress({ ...data, id: editAddressId });
-      console.log("entrou no update", data);
+      updateAddress({
+        ...data,
+        id: editAddressId,
+        selected: editAddress.selected,
+      });
     } else {
       const newAddress: AddressType = {
         ...data,
         id: uuidv4(),
+        selected: false,
       };
       addAddress(newAddress);
     }
     handleClose();
-    console.log(data);
   };
 
   return (
