@@ -9,7 +9,7 @@ export const useToast = () => {
   const [successToasts, setSuccessToasts] = useState<ToastMessage[]>([]);
   const [errorToasts, setErrorToasts] = useState<ToastMessage[]>([]);
 
-  const addToast = useCallback((message: string, isError = false, duration = 5000) => {
+  const addToast = useCallback((message: string, isError = false, duration = 3000) => {
     const id = new Date().getTime();
     const newToast = { id, message };
 

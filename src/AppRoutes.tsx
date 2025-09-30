@@ -8,7 +8,7 @@ import ScrollToTop from "./components/utils/ScrollToTop";
 import CategoryProducts from "./pages/CategoryProducts";
 import Cart from "./pages/Cart";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import Payment from "./pages/Payment";
+import Payment from "./pages/Steps";
 
 import SignInPage from "./pages/SignInPage";
 

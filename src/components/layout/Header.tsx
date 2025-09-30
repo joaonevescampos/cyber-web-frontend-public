@@ -29,7 +29,7 @@ export default function Header() {
 
   return (
     <div className="relative">
-      <header className="bg-white border-b border-[#B5B5B5] fixed top-0 w-full z-50">
+      <header className="bg-white border-b border-[#B5B5B5] fixed top-0 w-full z-30">
         <div className="max-w-[1600px] mx-auto">
           <div className="flex justify-between items-center px-4 py-6 md:px-8 md:py-4 lg:px-[60px] [@media(min-width:1440px)]:px-[160px] 2xl:px-[160px] xl:py-4">
             <div className="flex items-center">
@@ -110,7 +110,7 @@ export default function Header() {
       </header>
 
       {isMenuOpen && (
-        <nav className="md:hidden bg-white border-b border-[#B5B5B5] fixed top-[72px] left-0 w-full z-50">
+        <nav className="md:hidden bg-white border-b border-[#B5B5B5] fixed top-[72px] left-0 w-full z-30">
           <div className="px-4 py-6 md:px-8 md:py-4 lg:px-[60px] [@media(min-width:1440px)]:px-[160px] 2xl:px-[160px] xl:py-4">
             {menuItems.map((item) => (
               <NavLink

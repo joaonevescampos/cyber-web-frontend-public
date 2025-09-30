@@ -81,4 +81,15 @@ export default class Services {
       );
     }
   }
+
+  // async getReviewSummary(url: string): Promise<ReviewSummaryType> {
+  //   try {
+  //     const response = await httpClient.get(url);
+  //     return response.data;
+  //   } catch (error) {
+  //     throw new Error(
+  //       `Intern error server - Cannot get review summary: ${error}`
+  //     );
+  //   }
+  // }
 }
