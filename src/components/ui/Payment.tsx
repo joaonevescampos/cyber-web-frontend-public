@@ -13,7 +13,7 @@ import ErrorPayment from "../modal/ErrorPayment";
 const Payment = forwardRef((_, ref) => {
   const [addressSelected, setAddressSelected] = useState<AddressType>();
   const { getToken } = useAuth();
-  const [openSucess, setOpenSucess] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
 
   const {
@@ -94,7 +94,7 @@ const Payment = forwardRef((_, ref) => {
         throw new Error("Failed to update cart status");
       }
 
-      setOpenSucess(true);
+      setOpenSuccess(true);
     } catch (error: any) {
       setOpenError(true);
       throw new Error(`Error: ${error}`);
@@ -106,17 +106,16 @@ const Payment = forwardRef((_, ref) => {
   }));
 
   const handleCloseModal = () => {
-    setOpenSucess(false);
     setOpenError(false);
+    setOpenSuccess(false);
   };
 
   return (
     <div className="flex gap-24 max-lg:flex-col max-lg:w-fit max-lg:m-auto">
-      {openSucess ||
-        (openError && (
-          <div className="fixed inset-0 top-0 left-0 bg-black opacity-40 z-40 w-full h-full"></div>
-        ))}
-      {openSucess && <SuccessPayment />}
+      {(openSuccess || openError) && (
+        <div className="fixed inset-0 top-0 left-0 bg-black opacity-40 z-40 w-full h-full"></div>
+      )}
+      {openSuccess && <SuccessPayment />}
       {openError && <ErrorPayment handleClose={handleCloseModal} />}
 
       <div className="flex flex-col gap-6 flex-1 max-w-[512px] box-border p-8 max-md:p-4 border-1 border-[#EBEBEB] rounded-[10px]">
