@@ -10,9 +10,9 @@ import { useAuth } from "@clerk/clerk-react";
 import SuccessPayment from "../modal/SuccessPayment";
 import ErrorPayment from "../modal/ErrorPayment";
 
-const Payment = forwardRef((props, ref) => {
+const Payment = forwardRef((_, ref) => {
   const [addressSelected, setAddressSelected] = useState<AddressType>();
-  const { getToken, isLoaded, isSignedIn } = useAuth();
+  const { getToken } = useAuth();
   const [openSucess, setOpenSucess] = useState(false);
   const [openError, setOpenError] = useState(false);
 

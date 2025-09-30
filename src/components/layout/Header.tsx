@@ -3,9 +3,11 @@ import { useState } from "react";
 import favoritesIcon from "../../assets/img/favorites_icon.svg";
 import cartIcon from "../../assets/img/cart_icon.svg";
 import userIcon from "../../assets/img/user_icon.svg";
+import LogoutButton from "../ui/LogoutButton";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [openModalUser, setOpenModalUser] = useState(false);
 
   const menuItems = [
     { name: "Home", path: "/" },
@@ -96,14 +98,22 @@ export default function Header() {
                   path: "/under-construction",
                 },
                 { name: "Cart", src: cartIcon, path: "/cart" },
-                { name: "User", src: userIcon, path: "/under-construction" },
               ].map((item, index) => (
                 <Link to={item.path} key={index}>
-                  <button className="p-1">
+                  <button className="p-1 cursor-pointer">
                     <img src={item.src} alt={item.name} className="w-8 h-8" />
                   </button>
                 </Link>
               ))}
+              <button
+                className="relative p-1 cursor-pointer"
+                onClick={() => setOpenModalUser(!openModalUser)}
+              >
+                <img src={userIcon} alt="user icon" className="w-8 h-8" />
+                {openModalUser && (
+                <LogoutButton />
+              )}
+              </button>
             </div>
           </div>
         </div>
@@ -137,14 +147,20 @@ export default function Header() {
                   path: "/under-construction",
                 },
                 { name: "Cart", src: cartIcon, path: "/cart" },
-                { name: "User", src: userIcon, path: "/under-construction" },
               ].map((item, index) => (
                 <Link to={item.path} key={index}>
-                  <button className="p-1" key={item.name}>
+                  <button className="p-1 cursor-pointer" key={item.name}>
                     <img src={item.src} alt={item.name} className="w-8 h-8" />
                   </button>
                 </Link>
               ))}
+              <button
+                className="relative p-1 cursor-pointer"
+                onClick={() => setOpenModalUser(!openModalUser)}
+              >
+                <img src={userIcon} alt="user icon" className="w-8 h-8" />
+                {openModalUser && <LogoutButton />}
+              </button>
             </div>
           </div>
         </nav>
