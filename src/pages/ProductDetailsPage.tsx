@@ -94,7 +94,7 @@ const ProductDetailsPage = () => {
       <Header />
 
       <div className="flex gap-4 mt-[88px] pt-10 max-w-[1120px] m-auto text-[#A4A4A4] max-lg:px-4">
-        <ul className="flex list-none gap-4 hidden lg:flex">
+        <ul className="flex list-none gap-4 max-md:hidden lg:flex">
           <li>
             <Link to="/">Home</Link>
           </li>

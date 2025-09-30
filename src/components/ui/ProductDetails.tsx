@@ -3,7 +3,7 @@ import { useToast } from "../../hooks/useToast";
 import { ToastContainer } from "../modal/ToastContainer";
 
 import type { ProductDataType } from "../../pages/ProductDetailsPage";
-import { useCart } from "../../hooks/useCart";
+import { useGlobal } from "../../hooks/useGlobal";
 
 interface ProductDetailsProps {
   product: ProductDataType;
@@ -23,7 +23,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     removeErrorToast,
   } = useToast();
 
-  const { addToCart } = useCart();
+  const { addToCart } = useGlobal();
 
   const handleAddToWishlist = () => {
     addToast("Added to Wishlist!", false, 3000);

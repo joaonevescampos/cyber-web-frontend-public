@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
 import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
-import { useCart } from "../hooks/useCart";
 import closeIcon from "../assets/img/close.svg";
 import type { CartItem } from "../models/Cart";
+import { Link } from "react-router-dom";
+import { useGlobal } from "../hooks/useGlobal";
+import type { Summary } from "../models/Summary";
 
 const Cart = () => {
-  const [subtotal, setSubtotal] = useState(0);
+  const {
+    cart,
+    removeFromCart,
+    getProductsInCart,
+    updateAmount,
+    storeSummary,
+    summary,
+  } = useGlobal();
+  const [subtotal, setSubtotal] = useState(summary.subtotal);
   const tax = subtotal == 0 ? 0 : 50;
   const shippingHandling = subtotal == 0 ? 0 : 29;
-  const { cart, removeFromCart, getProductsInCart, updateAmount } = useCart();
 
   const sumProductsPrices = (cart: CartItem[]) => {
     const sumPrices = cart.reduce((acc, current) => {
@@ -17,6 +26,16 @@ const Cart = () => {
     }, 0);
     setSubtotal(sumPrices);
   };
+
+  useEffect(() => {
+    const summaryUpdated: Summary = {
+      subtotal,
+      estimatedTax: tax,
+      estimatedShip: shippingHandling,
+      total: subtotal + tax + shippingHandling,
+    };
+    storeSummary(summaryUpdated);
+  }, [subtotal]);
 
   const decreaseAmount = (id: number, currentAmount: number) => {
     if (currentAmount === 1) {
@@ -46,16 +65,18 @@ const Cart = () => {
           <h1 className=" font-semibold text-2xl ">Shopping Cart</h1>
           <div className="flex flex-col gap-10 max-h-[536px] overflow-y-auto">
             {cart.length > 0 ? (
-              cart.map((product) => (
+              cart.map((product: CartItem) => (
                 <div
                   className="flex items-center gap-6 max-md:gap-2"
                   key={product.id}
                 >
-                  <img
-                    src={product.url_image}
-                    alt={product.name}
-                    className="w-[90px]"
-                  />
+                  <Link to={`/product/${product.id}`}>
+                    <img
+                      src={product.url_image}
+                      alt={product.name}
+                      className="w-[90px]"
+                    />
+                  </Link>
                   <div className="flex max-md:flex-col items-center max-md:items-start gap-6 max-md:gap-2">
                     <div className="flex not-last:gap-4">
                       <div className="w-40 max-lg:w-fit text-start">
@@ -66,8 +87,12 @@ const Cart = () => {
                     <div className="flex gap-1 h-fit">
                       <div className="flex gap-1 h-fit">
                         <button
-                          onClick={() => decreaseAmount(product.id, product.amount)}
-                          className={`px-2 cursor-pointer ${product.amount == 1 ? "opacity-30" : "opacity-100"}`}
+                          onClick={() =>
+                            decreaseAmount(product.id, product.amount)
+                          }
+                          className={`px-2 cursor-pointer ${
+                            product.amount == 1 ? "opacity-30" : "opacity-100"
+                          }`}
                         >
                           -
                         </button>
@@ -75,7 +100,9 @@ const Cart = () => {
                           {product.amount}
                         </span>
                         <button
-                          onClick={() => increaseAmount(product.id, product.amount)}
+                          onClick={() =>
+                            increaseAmount(product.id, product.amount)
+                          }
                           className="px-2 cursor-pointer"
                         >
                           +
@@ -139,15 +166,11 @@ const Cart = () => {
               <div className="flex flex-col gap-2 text-[#545454]">
                 <div className="flex justify-between">
                   <span>Estimated Tax</span>
-                  <span className="text-black">
-                    $ {tax}
-                  </span>
+                  <span className="text-black">$ {tax}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Estimated shipping & Handling</span>
-                  <span className="text-black">
-                    $ {shippingHandling}
-                  </span>
+                  <span className="text-black">$ {shippingHandling}</span>
                 </div>
               </div>
               <div className="flex justify-between">
@@ -155,9 +178,11 @@ const Cart = () => {
                 <span>$ {subtotal + tax + shippingHandling}</span>
               </div>
             </div>
-            <button className="flex items-center justify-center bg-black hover:bg-gray-4 transition duration-300 text-white cursor-pointer rounded-[6px] h-[48px] w-full">
-              <span className="font-semibold">Checkout</span>
-            </button>
+            <Link to="/payment">
+              <button className="flex items-center justify-center bg-black hover:bg-gray-4 transition duration-300 text-white cursor-pointer rounded-[6px] h-[48px] w-full">
+                <span className="font-semibold">Checkout</span>
+              </button>
+            </Link>
           </div>
         </section>
       </main>
