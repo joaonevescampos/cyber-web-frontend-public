@@ -50,8 +50,6 @@ Run the project:
 npm run dev
 ```
 
-## Deploy na AWS
-
 ### Docker
 #### 1) Como foi feito?
 - Foi subido em docker para dev (backend e banco de dados) e para produção (backend, banco de dados e frontend).
@@ -99,11 +97,29 @@ Rode este comando para criar as imagens e containers:
 
 `docker exec -it backend npm run seed:dev`
 
-- Pronto! Agora o backend deve está funcionando em **http://localhost:4000**
+- Pronto! Agora o backend deve está funcionando em **http://localhost:4000**. O frontend não roda em docker, então  é necessário, dentro do repositório do frontend, rodar: `npm run dev`. Com isso o front em ambiente de desenvolvimento vai rodar em: **http://localhost:5173/**
+
+### Deploy com Docker e AWS
 
 #### 2.2) Como subir o backend, frontend e banco em produção?
 
-- Primeiro certifique-se que não está usando as 3 portas que vão ser necessárias para testa a aplicação: 3000, 4000 e 5432.
+- Se tiver com containers rodando:
+
+`docker compose down`
+
+- O ideal é remover as imagens e containers que criou no seu docker para previnir possíveis conflitos:
+
+Remover todos os cotainers: `docker container prune -f`
+
+Remover todas as imagens: `docker rmi -f $(docker images -q)`
+
+OBS.: Caso não tenha permissão, digite os comandos:
+
+`sudo usermod -aG docker $USER`
+
+`newgrp docker`
+
+- Certifique-se que não está usando as 3 portas que vão ser necessárias para testa a aplicação: 3000, 4000 e 5432.
 
 Teste para verificar se não tem portas ativas:
 
@@ -113,21 +129,6 @@ Para remover:
 
 `sudo kill -9 <PID>`
 
-- O ideal é remover as imagens e containers que criou no seu docker para previnir possíveis conflitos:
-
-Remover todos os cotainers: `docker container prune -f`
-
-Remover todas as imagens: `docker rmi -f $(docker images -q)`
-
-OBS1.: Caso não tenha permissão, digite os comandos:
-
-`sudo usermod -aG docker $USER`
-
-`newgrp docker`
-
-OBS2.: Se tiver com containers rodando:
-
-`docker compose down`
 
 Verifique se as imagens e containers foram excluidos mesmo:
 
@@ -190,7 +191,6 @@ services:
 
 volumes:
   db_data:
-
 EOF
 
 ```
