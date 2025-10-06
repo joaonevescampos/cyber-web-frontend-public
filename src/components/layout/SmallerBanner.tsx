@@ -1,4 +1,11 @@
 import { Link } from "react-router-dom";
+import airPodsImg from "../../assets/img/airpods-alt.png"
+import playstationDesk from "../../assets/img/PlayStation.png"
+import playstationMobi from "../../assets/img/PlayStation-mobile.png"
+import visionProImg from "../../assets/img/visionPro.png"
+import visionProAltImg from "../../assets/img/visionPro-alt.png"
+import macbookImg from "../../assets/img/macbook.png"
+import macbookAltImg from "../../assets/img/macbook-alt.png"
 
 const SmallerBanner = () => {
   return (
@@ -7,7 +14,7 @@ const SmallerBanner = () => {
         <div className="w-full h-[376px] bg-[#EDEDED] relative px-4 py-10">
           <div className="flex flex-col items-center justify-center h-full gap-6">
             <img
-              src="src/assets/img/airpods.png"
+              src={airPodsImg}
               alt="AirPods Max"
               className="w-[192px] h-[200px] object-contain"
             />
@@ -21,7 +28,7 @@ const SmallerBanner = () => {
         <div className="w-full h-[392px] bg-[#353535] relative px-4 py-10">
           <div className="flex flex-col items-center justify-center h-full gap-6">
             <img
-              src="src/assets/img/visionPro.png"
+              src={visionProImg}
               alt="Apple Vision Pro"
               className="w-[325px] h-[192px] object-contain"
             />
@@ -35,7 +42,7 @@ const SmallerBanner = () => {
         <div className="w-full h-[424px] bg-white relative px-4 py-10">
           <div className="flex flex-col items-center justify-start gap-6">
             <img
-              src="src/assets/img/PlayStation-mobile.png"
+              src={playstationMobi}
               alt="PlayStation 5"
               className="w-[200px] h-[200px] object-contain"
             />
@@ -49,7 +56,7 @@ const SmallerBanner = () => {
         <div className="w-full h-[504px] bg-[#EDEDED] relative px-4 py-10">
           <div className="flex flex-col items-center justify-center h-full gap-6">
             <img
-              src="src/assets/img/macbook.png"
+              src={macbookImg}
               alt="MacBook Air"
               className="w-[330px] h-[200px] object-contain"
             />
@@ -71,7 +78,7 @@ const SmallerBanner = () => {
         <div className="flex-1 h-[450px] lg:h-[500px] xl:h-[600px] flex flex-col">
           <div className="w-full h-[246px] lg:h-[273px] xl:h-[328px] bg-white relative">
             <img
-              src="src/assets/img/PlayStation.png"
+              src={playstationDesk}
               alt="PlayStation 5"
               className="w-[270px] lg:w-[320px] xl:w-[360px] h-[246px] lg:h-[273px] xl:h-[328px] object-contain absolute left-0 top-0 z-0"
             />
@@ -85,7 +92,7 @@ const SmallerBanner = () => {
           <div className="w-full h-[204px] lg:h-[227px] xl:h-[272px] flex">
             <div className="flex-1 h-[204px] lg:h-[227px] xl:h-[272px] bg-[#EDEDED] relative">
               <img
-                src="src/assets/img/airpods-alt.png"
+                src={airPodsImg}
                 alt="AirPods Max"
                 className="w-[78px] lg:w-[87px] xl:w-[104px] h-[204px] lg:h-[227px] xl:h-[272px] object-contain absolute left-0 top-0 z-0"
               />
@@ -97,7 +104,7 @@ const SmallerBanner = () => {
 
             <div className="flex-1 h-[204px] lg:h-[227px] xl:h-[272px] bg-[#353535] relative">
               <img
-                src="src/assets/img/visionPro-alt.png"
+                src={visionProAltImg}
                 alt="Apple Vision Pro"
                 className="w-[102px] lg:w-[114px] xl:w-[136px] h-[143px] lg:h-[159px] xl:h-[190px] object-contain absolute left-0 top-1/2 -translate-y-1/2 z-0"
               />
@@ -124,7 +131,7 @@ const SmallerBanner = () => {
           </div>
 
           <img
-            src="src/assets/img/macbook-alt.png"
+            src={macbookAltImg}
             alt="MacBook Air"
             className="w-[212px] lg:w-[235px] xl:w-[282px] h-[377px] lg:h-[418px] xl:h-[502px] object-contain absolute right-0 top-1/2 -translate-y-1/2 z-0"
           />

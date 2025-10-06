@@ -1,18 +1,22 @@
 import React, { useState, useRef } from "react";
 import arrowIcon from "../../assets/img/arrow-down_icon.svg";
 import type BrandType from "../../models/Brands";
-
+import searchIconImg from "../../assets/img/search_icon.svg";
 interface BrandFilterProps {
   options: BrandType[];
   onChange: (value: string[]) => void;
   onClick: (value: string) => void;
 }
 
-const BrandFilter: React.FC<BrandFilterProps> = ({ options, onChange, onClick }) => {
+const BrandFilter: React.FC<BrandFilterProps> = ({
+  options,
+  onChange,
+  onClick,
+}) => {
   const [isOpen, setIsOpen] = useState(window.innerWidth < 768 ? false : true);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const ref = useRef<HTMLDivElement>(null);
-  const [searchValue, setSearchValue] = useState("")
+  const [searchValue, setSearchValue] = useState("");
 
   const handleChange = (label: string, checked: boolean) => {
     if (checked) {
@@ -27,7 +31,10 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ options, onChange, onClick })
   };
 
   return (
-    <div ref={ref} className="relative w-full max-w-64 max-md:max-w-96 max-md:px-2 max-md:w-fit">
+    <div
+      ref={ref}
+      className="relative w-full max-w-64 max-md:max-w-96 max-md:px-2 max-md:w-fit"
+    >
       <button
         type="button"
         className="w-full max-md:w-[344px] py-2 max-md:p-2 border-b-1 border-[#D4D4D4] cursor-pointer bg-white text-black flex justify-between items-center hover:bg-gray-100 focus:outline-none font-medium text-[18px]"
@@ -43,7 +50,7 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ options, onChange, onClick })
 
       <div className="flex items-center rounded-lg px-4 py-4 w-full h-[40px] bg-gray-2 my-4 max-md:max-w-[344px]">
         <img
-          src="/src/assets/img/search_icon.svg"
+          src={searchIconImg}
           alt="Search"
           className="w-6 h-6 mr-2 flex-shrink-0 cursor-pointer"
           onClick={() => onClick(searchValue)}
@@ -68,7 +75,6 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ options, onChange, onClick })
     checked:bg-black checked:border-black
     checked:before:content-['✔'] checked:before:text-white
     checked:before:flex checked:before:items-center checked:before:justify-center"
-
               />
               <label htmlFor={`${index}`}>{option.brand}</label>
               <span className="text-[#929292] text-xs">{option.total}</span>

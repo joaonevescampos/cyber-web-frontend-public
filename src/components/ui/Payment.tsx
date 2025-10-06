@@ -13,7 +13,7 @@ import ErrorPayment from "../modal/ErrorPayment";
 const Payment = forwardRef((_, ref) => {
   const [addressSelected, setAddressSelected] = useState<AddressType>();
   const { getToken } = useAuth();
-  const [openSucess, setOpenSucess] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
 
   const {
@@ -60,7 +60,7 @@ const Payment = forwardRef((_, ref) => {
       }
 
       const createCartResponse = await fetch(
-        "http://localhost:3333/api/shopping_carts",
+        `http://${import.meta.env.VITE_API_URL}/shopping_carts`,
         {
           method: "POST",
           headers: {
@@ -79,7 +79,7 @@ const Payment = forwardRef((_, ref) => {
       const cartId = createdCart.shopping_cart_id;
 
       const updateStatusResponse = await fetch(
-        `http://localhost:3333/api/shopping_carts/${cartId}`,
+        `${import.meta.env.VITE_API_URL}/shopping_carts/${cartId}`,
         {
           method: "PATCH",
           headers: {
@@ -94,7 +94,7 @@ const Payment = forwardRef((_, ref) => {
         throw new Error("Failed to update cart status");
       }
 
-      setOpenSucess(true);
+      setOpenSuccess(true);
     } catch (error: any) {
       setOpenError(true);
       throw new Error(`Error: ${error}`);
@@ -106,17 +106,16 @@ const Payment = forwardRef((_, ref) => {
   }));
 
   const handleCloseModal = () => {
-    setOpenSucess(false);
     setOpenError(false);
+    setOpenSuccess(false);
   };
 
   return (
     <div className="flex gap-24 max-lg:flex-col max-lg:w-fit max-lg:m-auto">
-      {openSucess ||
-        (openError && (
-          <div className="fixed inset-0 top-0 left-0 bg-black opacity-40 z-40 w-full h-full"></div>
-        ))}
-      {openSucess && <SuccessPayment />}
+      {(openSuccess || openError) && (
+        <div className="fixed inset-0 top-0 left-0 bg-black opacity-40 z-40 w-full h-full"></div>
+      )}
+      {openSuccess && <SuccessPayment />}
       {openError && <ErrorPayment handleClose={handleCloseModal} />}
 
       <div className="flex flex-col gap-6 flex-1 max-w-[512px] box-border p-8 max-md:p-4 border-1 border-[#EBEBEB] rounded-[10px]">
@@ -188,7 +187,7 @@ const Payment = forwardRef((_, ref) => {
             className="p-4 border-1 border-[#CECECE] rounded-[7px] outline-0 w-full"
             {...register("name", { required: "Card name is required." })}
           />
-          <p className="text-red-700">{errors.name?.message}</p>
+          <p className="text-red-700 text-sm">{errors.name?.message}</p>
           <Controller
             name="cardNumber"
             control={control}
@@ -208,7 +207,7 @@ const Payment = forwardRef((_, ref) => {
               />
             )}
           />
-          <p className="text-red-700">{errors.cardNumber?.message}</p>
+          <p className="text-red-700 text-sm">{errors.cardNumber?.message}</p>
           <div className="flex gap-4">
             <div>
               <Controller
@@ -253,7 +252,7 @@ const Payment = forwardRef((_, ref) => {
                   />
                 )}
               />
-              <p className="text-red-700">{errors.expDate?.message}</p>
+              <p className="text-red-700 text-sm pt-2">{errors.expDate?.message}</p>
             </div>
             <div>
               <Controller
@@ -275,7 +274,7 @@ const Payment = forwardRef((_, ref) => {
                   />
                 )}
               />
-              <p className="text-red-700">{errors.cvv?.message}</p>
+              <p className="text-red-700 text-sm pt-2">{errors.cvv?.message}</p>
             </div>
           </div>
           <div className="flex gap-2 items-center pt-4">

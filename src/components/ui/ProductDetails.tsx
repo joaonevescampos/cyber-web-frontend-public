@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useToast } from "../../hooks/useToast";
 import { ToastContainer } from "../modal/ToastContainer";
-
 import type { ProductDataType } from "../../pages/ProductDetailsPage";
 import { useGlobal } from "../../hooks/useGlobal";
+import screenSizeIcon from "../../assets/img/screen-size_icon.svg"
+import cpuIcon from "../../assets/img/cpu_icon.svg"
+import coresIcon from "../../assets/img/cores_icon.svg"
+import mainCameraIcon from "../../assets/img/main-camera_icon.svg"
+import frontCameraIcon from "../../assets/img/front-camera_icon.svg"
+import batteryIcon from "../../assets/img/battery_icon.svg"
+import deliveryIcon from "../../assets/img/delivery_icon.svg"
+import stockIcon from "../../assets/img/stock_icon.svg"
+import guaranteedIcon from "../../assets/img/guaranteed_icon.svg"
+
+
 
 interface ProductDetailsProps {
   product: ProductDataType;
@@ -205,7 +215,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                 <div className="flex flex-wrap gap-4 max-md:gap-2">
                   <div className="w-[168px] max-md:w-[166px] h-16 bg-[#F4F4F4] rounded-[7px] flex items-center gap-2">
                     <img
-                      src="/src/assets/img/screen-size_icon.svg"
+                      src={screenSizeIcon}
                       alt="screen size icon"
                       className="w-6 h-6 ml-1"
                     />
@@ -220,7 +230,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                   </div>
                   <div className="w-[168px] max-md:w-[166px] h-16 px-2 bg-[#F4F4F4] rounded-[7px] flex items-center gap-2">
                     <img
-                      src="/src/assets/img/cpu_icon.svg"
+                      src={cpuIcon}
                       alt="screen size icon"
                       className="w-6 h-6"
                     />
@@ -235,7 +245,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                   </div>
                   <div className="w-[168px] max-md:w-[166px] h-16 px-2 bg-[#F4F4F4] rounded-[7px] flex items-center gap-2">
                     <img
-                      src="/src/assets/img/cores_icon.svg"
+                      src={coresIcon}
                       alt="screen size icon"
                       className="w-6 h-6"
                     />
@@ -250,7 +260,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                   </div>
                   <div className="w-[168px] max-md:w-[166px] h-16 px-2 bg-[#F4F4F4] rounded-[7px] flex items-center gap-2">
                     <img
-                      src="/src/assets/img/main-camera_icon.svg"
+                      src={mainCameraIcon}
                       alt="screen size icon"
                       className="w-6 h-6"
                     />
@@ -265,7 +275,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                   </div>
                   <div className="w-[168px] max-md:w-[166px] h-16 px-2 bg-[#F4F4F4] rounded-[7px] flex items-center gap-2">
                     <img
-                      src="/src/assets/img/front-camera_icon.svg"
+                      src={frontCameraIcon}
                       alt="screen size icon"
                       className="w-6 h-6"
                     />
@@ -280,7 +290,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                   </div>
                   <div className="w-[168px] max-md:w-[166px] h-16 px-2 bg-[#F4F4F4] rounded-[7px] flex items-center gap-2">
                     <img
-                      src="/src/assets/img/battery_icon.svg"
+                      src={batteryIcon}
                       alt="screen size icon"
                       className="w-6 h-6"
                     />
@@ -327,7 +337,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             <div className="flex gap-8">
               <div className="flex max-md:flex-col gap-4 items-center max-w-[157px] w-full">
                 <img
-                  src="/src/assets/img/delivery_icon.svg"
+                  src={deliveryIcon}
                   alt="delivery truck"
                 />
                 <div className="text-[14px] max-md:text-center">
@@ -339,7 +349,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
               </div>
               <div className="flex max-md:flex-col gap-4 items-center max-w-[157px] w-full">
                 <img
-                  src="/src/assets/img/stock_icon.svg"
+                  src={stockIcon}
                   alt="delivery truck"
                 />
                 <div className="text-[14px] max-md:text-center">
@@ -349,7 +359,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
               </div>
               <div className="flex max-md:flex-col gap-4 items-center max-w-[157px] w-full">
                 <img
-                  src="/src/assets/img/guaranteed_icon.svg"
+                  src={guaranteedIcon}
                   alt="delivery truck"
                 />
                 <div className="text-[14px] max-md:text-center">

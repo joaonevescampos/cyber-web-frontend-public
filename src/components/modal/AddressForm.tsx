@@ -58,7 +58,7 @@ const AddressForm = ({ handleClose, editAddressId = {} }: any) => {
           {...register("name", { required: "Street name is required." })}
           defaultValue={editAddress?.name}
         />
-        <p className="text-red-700">{errors.name?.message}</p>
+        <p className="text-red-700 text-sm">{errors.name?.message}</p>
         <label htmlFor="address" className="font-medium text-sm">
           Address *
         </label>
@@ -70,7 +70,7 @@ const AddressForm = ({ handleClose, editAddressId = {} }: any) => {
           {...register("address", { required: "Address is required." })}
           defaultValue={editAddress?.address}
         />
-        <p className="text-red-700">{errors.address?.message}</p>
+        <p className="text-red-700 text-sm">{errors.address?.message}</p>
         <label htmlFor="phone" className="font-medium text-sm">
           Phone *
         </label>
@@ -95,7 +95,7 @@ const AddressForm = ({ handleClose, editAddressId = {} }: any) => {
           )}
         />
 
-        <p className="text-red-700">{errors.contact?.message}</p>
+        <p className="text-red-700 text-sm">{errors.contact?.message}</p>
         <h2 className="font-medium text-[18px] pb-4">
           Select your address type
         </h2>
@@ -131,7 +131,7 @@ const AddressForm = ({ handleClose, editAddressId = {} }: any) => {
             <span className="pl-2">Other</span>
           </label>
         </div>
-        <p className="text-red-700">{errors.tag?.message}</p>
+        <p className="text-red-700 text-sm">{errors.tag?.message}</p>
 
         <button
           type="submit"
