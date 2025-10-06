@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import iphone14ProImg from "../../assets/img/iphone14pro.png"
 
 export default function Banner() {
   return (
@@ -26,7 +27,7 @@ export default function Banner() {
           </div>
           <div className="flex justify-center items-center">
             <img
-              src="/src/assets/img/iphone14pro.png"
+              src={iphone14ProImg}
               alt="iPhone 14 Pro"
               className="w-[321px] h-[349px] object-cover object-top md:w-[406px] md:h-auto"
             />

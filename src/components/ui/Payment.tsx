@@ -60,7 +60,7 @@ const Payment = forwardRef((_, ref) => {
       }
 
       const createCartResponse = await fetch(
-        "http://localhost:3333/api/shopping_carts",
+        `http://${import.meta.env.VITE_API_URL}/shopping_carts`,
         {
           method: "POST",
           headers: {
@@ -79,7 +79,7 @@ const Payment = forwardRef((_, ref) => {
       const cartId = createdCart.shopping_cart_id;
 
       const updateStatusResponse = await fetch(
-        `http://localhost:3333/api/shopping_carts/${cartId}`,
+        `${import.meta.env.VITE_API_URL}/shopping_carts/${cartId}`,
         {
           method: "PATCH",
           headers: {
