@@ -14,7 +14,7 @@ export function useRelatedProducts(brand: string) {
   const fetchRelatedProducts = async () => {
     try {
       setLoading(true);
-      const url = `http://localhost:3333/api/products/related/${brand}`;
+      const url = `${import.meta.env.VITE_API_URL}/products/related/${brand}`;
 
       const response = await api.getRelatedProducts(url);
       setProductsResponse(response.data);

@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import iPadProImg from "../../assets/img/ipadPro.png"
+import popularProductsImg from "../../assets/img/popularProducts.png"
+import samsungGalaxyImg from "../../assets/img/samsungGalaxy.png"
+import macbookProImg from "../../assets/img/macbookPro.png"
 
 const Banners = () => {
   const [currentSlide, setCurrentSlide] = useState(0); 
@@ -9,7 +13,7 @@ const Banners = () => {
     {
       id: "ipad",
       title: "Ipad Pro",
-      image: "src/assets/img/ipadPro.png",
+      image: iPadProImg,
       bgColor: "bg-[#F9F9F9]",
       textColor: "text-black",
       buttonStyle: "border-black text-black hover:bg-black hover:text-white"
@@ -17,7 +21,7 @@ const Banners = () => {
     {
       id: "popular",
       title: "Popular Products",
-      image: "src/assets/img/popularProducts.png",
+      image: popularProductsImg,
       bgColor: "bg-white",
       textColor: "text-black",
       buttonStyle: "border-black text-black hover:bg-black hover:text-white"
@@ -25,7 +29,7 @@ const Banners = () => {
     {
       id: "samsung",
       title: "Samsung Galaxy",
-      image: "src/assets/img/samsungGalaxy.png",
+      image: samsungGalaxyImg,
       bgColor: "bg-[#EAEAEA]",
       textColor: "text-black",
       buttonStyle: "border-black text-black hover:bg-black hover:text-white"
@@ -33,7 +37,7 @@ const Banners = () => {
     {
       id: "macbook",
       title: "Macbook Pro",
-      image: "src/assets/img/macbookPro.png",
+      image: macbookProImg,
       bgColor: "bg-[#2C2C2C]",
       textColor: "text-white",
       buttonStyle: "border-white text-white hover:bg-white hover:text-[#2C2C2C]"
@@ -110,7 +114,7 @@ const Banners = () => {
           <div className="flex-1 min-w-[280px] xl:max-w-[360px] [@media(min-width:1440px)]:max-w-none h-[640px] bg-white relative px-8 lg:pt-0 lg:pb-[56px] flex flex-col justify-between">
             <div className="flex justify-center items-end relative h-[346px] [@media(min-width:1440px)]:h-[366px] overflow-hidden">
               <img
-                src="src/assets/img/popularProducts.png"
+                src={popularProductsImg}
                 alt="Popular Products"
                 className="h-[346px] xl:w-[380px] [@media(min-width:1440px)]:w-[420px] [@media(min-width:1440px)]:h-[366px] object-cover xl:translate-y-8 [@media(min-width:1440px)]:translate-y-8 xl:scale-[1.15] [@media(min-width:1440px)]:scale-[1.15]"
               />
@@ -138,7 +142,7 @@ const Banners = () => {
           <div className="flex-1 min-w-[280px] xl:max-w-[360px] [@media(min-width:1440px)]:max-w-none h-[640px] bg-[#F9F9F9] relative px-8 lg:pt-0 lg:pb-[56px] flex flex-col justify-between">
             <div className="flex justify-center items-end h-[346px] [@media(min-width:1440px)]:h-[366px]">
               <img
-                src="src/assets/img/ipadPro.png"
+                src={iPadProImg}
                 alt="iPad Pro"
                 className="w-full max-w-[340px] h-[346px] xl:max-w-[320px] xl:h-[326px] [@media(min-width:1440px)]:max-w-[360px] [@media(min-width:1440px)]:h-[366px] object-cover"
               />
@@ -165,7 +169,7 @@ const Banners = () => {
           <div className="flex-1 min-w-[280px] xl:max-w-[360px] [@media(min-width:1440px)]:max-w-none h-[640px] bg-[#EAEAEA] relative px-8 lg:pt-0 lg:pb-[56px] flex flex-col justify-between">
             <div className="flex justify-center items-end h-[346px] [@media(min-width:1440px)]:h-[366px]">
               <img
-                src="src/assets/img/samsungGalaxy.png"
+                src={samsungGalaxyImg}
                 alt="Samsung Galaxy"
                 className="w-full max-w-[340px] h-[346px] xl:max-w-[340px] [@media(min-width:1440px)]:max-w-[360px] [@media(min-width:1440px)]:h-[366px] object-cover"
               />
@@ -192,7 +196,7 @@ const Banners = () => {
           <div className="flex-1 min-w-[280px] xl:max-w-[360px] [@media(min-width:1440px)]:max-w-none h-[640px] bg-[#2C2C2C] relative px-8 lg:pt-0 lg:pb-[56px] flex flex-col justify-between">
             <div className="flex justify-center items-end h-[346px] [@media(min-width:1440px)]:h-[366px]">
               <img
-                src="src/assets/img/macbookPro.png"
+                src={macbookProImg}
                 alt="MacBook Pro"
                 className="w-full max-w-[340px] h-[346px] xl:max-w-[340px] [@media(min-width:1440px)]:max-w-[360px] [@media(min-width:1440px)]:h-[366px] object-cover"
               />

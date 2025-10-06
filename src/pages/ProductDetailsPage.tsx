@@ -60,7 +60,7 @@ const ProductDetailsPage = () => {
         }
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:3333/api/products/${id}`
+          `${import.meta.env.VITE_API_URL}/products/${id}`
         );
         setProduct(response.data.data);
       } catch (err) {

@@ -4,6 +4,11 @@ import favoritesIcon from "../../assets/img/favorites_icon.svg";
 import cartIcon from "../../assets/img/cart_icon.svg";
 import userIcon from "../../assets/img/user_icon.svg";
 import LogoutButton from "../ui/LogoutButton";
+import logoIcon from "../../assets/img/logoname-dark.svg"
+import closeIcon from "../../assets/img/close_icon.svg"
+import burguerIcon from "../../assets/img/burguer_icon.svg"
+import searchIcon from "../../assets/img/search_icon.svg"
+
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,7 +42,7 @@ export default function Header() {
             <div className="flex items-center">
               <Link to="/">
                 <img
-                  src="/src/assets/img/logoname-dark.svg"
+                  src={logoIcon}
                   alt="Cyber Logo"
                   className="h-6 w-auto"
                 />
@@ -46,7 +51,7 @@ export default function Header() {
 
             <div className="hidden md:flex items-center rounded-lg px-4 py-4 w-[220px] lg:w-[372px] h-[56px] bg-gray-2">
               <img
-                src="/src/assets/img/search_icon.svg"
+                src={searchIcon}
                 alt="Search"
                 className="w-6 h-6 mr-2 flex-shrink-0"
               />
@@ -82,8 +87,9 @@ export default function Header() {
               <img
                 src={
                   isMenuOpen
-                    ? "/src/assets/img/close_icon.svg"
-                    : "/src/assets/img/burguer_icon.svg"
+                    ? `${closeIcon}`
+                    : `${burguerIcon} `
+                    
                 }
                 alt={isMenuOpen ? "Close menu" : "Open menu"}
                 className="w-10 h-10"
