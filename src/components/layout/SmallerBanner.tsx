@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import airPodsImg from "../../assets/img/airpods-alt.png"
+import airPodsAltImg from "../../assets/img/airpods-alt.png"
+import airPodsImg from "../../assets/img/airpods.png"
 import playstationDesk from "../../assets/img/PlayStation.png"
 import playstationMobi from "../../assets/img/PlayStation-mobile.png"
 import visionProImg from "../../assets/img/visionPro.png"
@@ -92,7 +93,7 @@ const SmallerBanner = () => {
           <div className="w-full h-[204px] lg:h-[227px] xl:h-[272px] flex">
             <div className="flex-1 h-[204px] lg:h-[227px] xl:h-[272px] bg-[#EDEDED] relative">
               <img
-                src={airPodsImg}
+                src={airPodsAltImg}
                 alt="AirPods Max"
                 className="w-[78px] lg:w-[87px] xl:w-[104px] h-[204px] lg:h-[227px] xl:h-[272px] object-contain absolute left-0 top-0 z-0"
               />
