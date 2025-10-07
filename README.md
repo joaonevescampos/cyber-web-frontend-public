@@ -154,40 +154,39 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   backend:
     build: ./cyber-web-backend
     container_name: backend
     restart: always
     env_file:
-      - ./cyber-web-backend/.env.${NODE_ENV:-development}
-    environment:
-      - NODE_ENV=${NODE_ENV:-development}
+      - ./cyber-web-backend/.env.production
     ports:
-      - "4000:4000"
-    command: ${COMMAND:-npm start}
+    - "4000:4000"
+    command: sh -c "npx prisma migrate deploy && npm start"
     depends_on:
       - db
+    networks:
+      - app-network
 
   frontend:
     build: ./desafio-3-cyber-web-frontend
     container_name: frontend
     restart: always
     ports:
-      - "3000:80"
+      - "80:80"
     env_file:
-      - ./desafio-3-cyber-web-frontend/.env.${NODE_ENV:-development}
-    environment:
-      - NODE_ENV=${NODE_ENV:-development}
-    command: >
-      sh -c "
-      if [ '$NODE_ENV' = 'development' ]; then
-        npm run dev -- --host 0.0.0.0;
-      else
-        nginx -g 'daemon off;';
-      fi"
+      - ./desafio-3-cyber-web-frontend/.env.production
     depends_on:
       - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   db_data:
