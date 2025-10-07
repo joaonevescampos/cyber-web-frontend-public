@@ -44,7 +44,7 @@ Produção: Nas branches de produção, foram usado docker compose para posterio
 
 ```bash
 
-git  clone  https://github.com/joaonevescampos/cyber-web-frontend.git
+git clone https://github.com/joaonevescampos/desafio-3-cyber-web-frontend.git
 
 ```
 Change to your repository
