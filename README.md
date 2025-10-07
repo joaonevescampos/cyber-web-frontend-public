@@ -24,8 +24,21 @@ The main goal of this project is to:
 - **Build Tool**: Vite
 - **Version Control**: Git + Conventional Commits
 ---
-  
-## 📦 Installation
+
+## Strategy
+
+Foi adotada uma estratégia de duas branches: uma para produção e outra para desenvolvimento.
+- Branch de desenvolvimento do frontend -> **main**
+- Branch de desenvolvimento do backend -> **main**
+- Branch de produção do frontend -> **feature/deploy**
+- Branch de produção do backend -> **feature/config-deploy**
+
+
+Desenvolvimento: Na branch main, não foi usado docker, então pode rodar o projeto normalmente com seguindo os passos da seção 1.
+
+Produção: Nas branches de produção, foram usado docker compose para posteriormente subir na AWS. Mais detalhes descritos na seção 2.
+
+## 📦 Development: Installation
 
 ### 1. Clone the repository
 
@@ -37,7 +50,7 @@ git  clone  https://github.com/joaonevescampos/cyber-web-frontend.git
 Change to your repository
 
 ```bash
-cd cyber-web-frontend
+cd desafio-3-cyber-web-frontend
 ```
 
 Install the dependencies:
@@ -50,95 +63,63 @@ Run the project:
 npm run dev
 ```
 
-### Docker
-#### 1) Como foi feito?
-- Foi subido em docker para dev (backend e banco de dados) e para produção (backend, banco de dados e frontend).
-- Foi escolhido a porta 4000 para rodar o backend, porta 3000 para o frontend e 5432 para o banco de dados.
+## Produção: Deploy com Docker e AWS
 
-#### 2) Como usei o docker e subir as imagens e containers?
-- Optei em usar o docker compose para facilitar subir ambos projetos ao mesmo tempo criando um arquivo docker-compose.yml uma pasta onde tinha ambos projetos (backend e frontend). Criei também para cada projeto um Dockerfile. Cada projeto tem suas variáveis de ambiente onde eu optei em criar .env.development para desenvolvimento e .env.production para ambiente de produção.
+### 2) Como subir o backend, frontend e banco em produção?
+- Foi criado uma instancia em EC2 da AWS, configurado uma chave SSH para ser possível clonar os repositórios privados do github. Depois de criado a instância, conectou-se com a instância no meu computador por meio de par de chaves. Usou-se uma máquina Linux Ubuntu e dentro dessa máquina, no terminal linux, seguiu-se os seguintes passos abaixo:
 
-OBS.: Para subir para a AWS
+### 2.1) Instalação do docker
 
-#### 2.1) Como subir o backend e banco em dev?
-- Primeiro certifique-se que não está usando as 3 portas que vão ser necessárias para testa a aplicação: 3000, 4000 e 5432.
+**2.1.1. Atualizar o sistema**
 
-Teste para verificar se não tem portas ativas:
+```bash
+sudo apt update
+sudo apt upgrade -y
+```
 
-`sudo lsof -i :<port number>`
-
-Para remover:
-
-`sudo kill -9 <PID>`
-
-- O ideal é remover as imagens e containers que criou no seu docker para previnir possíveis conflitos:
-
-Remover todos os cotainers: `docker container prune -f `
-
-Remover todas as imagens: `docker rmi -f $(docker images -q)`
-
-OBS.: Caso não tenha permissão, digite os comandos:
-
-`sudo usermod -aG docker $USER`
-
-`newgrp docker`
-
-- Agora está tudo pronto para instalar os pacotes para o docker:
-
-OBS.: **Certifique-se que está dentro da pasta ./cyber-web-backend**
-
-Rode este comando para criar as imagens e containers:
-
-`NODE_ENV=development COMMAND="npm run dev" docker compose up -d --build`
-
-- **Rode os comandos para criar e popular as tabelas no banco de dados postgres**
-
-`docker exec -it backend npx prisma migrate dev`
-
-`docker exec -it backend npm run seed:dev`
-
-- Pronto! Agora o backend deve está funcionando em **http://localhost:4000**. O frontend não roda em docker, então  é necessário, dentro do repositório do frontend, rodar: `npm run dev`. Com isso o front em ambiente de desenvolvimento vai rodar em: **http://localhost:5173/**
-
-### Deploy com Docker e AWS
-
-#### 2.2) Como subir o backend, frontend e banco em produção?
-
-- Se tiver com containers rodando:
-
-`docker compose down`
-
-- O ideal é remover as imagens e containers que criou no seu docker para previnir possíveis conflitos:
-
-Remover todos os cotainers: `docker container prune -f`
-
-Remover todas as imagens: `docker rmi -f $(docker images -q)`
-
-OBS.: Caso não tenha permissão, digite os comandos:
-
-`sudo usermod -aG docker $USER`
-
-`newgrp docker`
-
-- Certifique-se que não está usando as 3 portas que vão ser necessárias para testa a aplicação: 3000, 4000 e 5432.
-
-Teste para verificar se não tem portas ativas:
-
-`sudo lsof -i :<port number>`
-
-Para remover:
-
-`sudo kill -9 <PID>`
+**2.1.2. Instalar dependências**
 
 
-Verifique se as imagens e containers foram excluidos mesmo:
+```bash
+sudo apt install apt-transport-https ca-certificates curl gnupg lsb-release -y
+```
 
-`docker ps -a`
+**2.1.3. Adicionar a chave GPG do Docker**
 
-`docker images`
+```bash
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
 
-- Agora você irá precisar criar uma pasta e dentro dela inserir o código do docker-compose.yml e clonar os dois repositorios (frontend e backend). Siga os passos a seguir:
+**2.1.4. Adicionar o repositório do Docker**
 
-#### 1) Criar a pasta e o docker-compose.yml no terminal do bash:
+```bash
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+**2.1.5. Atualizar a lista de pacotes**
+```bash
+sudo apt update
+```
+
+**2.1.6. Instalar o Docker**
+```bash
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+```
+**2.1.7. Adicionar usuário ao grupo docker (para não usar sudo)**
+```bash
+sudo usermod -aG docker $USER
+```
+Importante: Faça logout e login novamente para que a mudança tenha efeito.
+
+**2.1.8. Testar a instalação**
+```bash
+docker --version
+docker images
+docker ps -a
+```
+
+### 2.2) Criar uma pasta do projeto e o docker-compose.yml no terminal do bash:
 ```bash
 mkdir project && cd project && cat > docker-compose.yml << 'EOF'
 services:
@@ -154,72 +135,87 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   backend:
     build: ./cyber-web-backend
     container_name: backend
     restart: always
     env_file:
-      - ./cyber-web-backend/.env.${NODE_ENV:-development}
-    environment:
-      - NODE_ENV=${NODE_ENV:-development}
+      - ./cyber-web-backend/.env.production
     ports:
-      - "4000:4000"
-    command: ${COMMAND:-npm start}
+    - "4000:4000"
+    command: sh -c "npx prisma migrate deploy && npm start"
     depends_on:
       - db
+    networks:
+      - app-network
 
   frontend:
     build: ./desafio-3-cyber-web-frontend
     container_name: frontend
     restart: always
     ports:
-      - "3000:80"
+      - "80:80"
     env_file:
-      - ./desafio-3-cyber-web-frontend/.env.${NODE_ENV:-development}
-    environment:
-      - NODE_ENV=${NODE_ENV:-development}
-    command: >
-      sh -c "
-      if [ '$NODE_ENV' = 'development' ]; then
-        npm run dev -- --host 0.0.0.0;
-      else
-        nginx -g 'daemon off;';
-      fi"
+      - ./desafio-3-cyber-web-frontend/.env.production
     depends_on:
       - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   db_data:
 EOF
 
 ```
-2) clonar os repositórios do front e back:
+### 2.3) clonar os repositórios do front e back:
 
-2.1) Frontend: 
+**2.3.1) Frontend:**
 
 `git clone https://github.com/joaonevescampos/desafio-3-cyber-web-frontend.git`
 
-2.2) Backend: 
+**2.3.2) Backend:**
 
 `git clone https://github.com/joaonevescampos/cyber-web-backend.git`
 
+### 2.4) Mudar para branches de produção:
 
-- Agora está tudo pronto para instalar os pacotes para o docker. **Lembre que deve estar na raiz "project", na pasta onde tem o docker-compose.yml e ambos repositórios:**
+**Frontend**
 
-Rode este comando para criar as imagens e containers:
+Entre no repositório do frontend: `cd desafio-3-cyber-web-frontend`
+Mudar para a branch de produção: `git checkout feature/deploy`
 
-`NODE_ENV=production docker compose up -d --build`
+**Backend**
 
-- **Rode os comandos para criar e popular as tabelas no banco de dados postgres**
+Entre no repositório do backend: `cd cyber-web-backend`
+Mudar para a branch de produção: `git checkout feature/config-deploy`
+
+- Agora está tudo pronto para instalar os pacotes para o docker. 
+
+### 2.5) Rodar o docker compose na instância EC2:
+
+**Lembre que deve estar na raiz "project", na pasta onde tem o docker-compose.yml e ambos repositórios:**
+
+`cd ..`
+
+**2.5.1) Rode este comando para criar as imagens e containers:**
+
+`docker compose up -d --build`
+
+**2.5.2) Rode os comandos para criar e popular as tabelas no banco de dados postgres**
 
 `docker exec -it backend npx prisma migrate deploy`
 
 `docker exec -it backend npm run seed:prod`
 
-- Pronto! Agora o backend deve está funcionando em **http://localhost:4000** e frontend está em **http://localhost:3000**
-
-
+- Pronto! Agora o backend deve está funcionando em **http://18.117.245.170/api** e frontend está na porta 80 em **http://18.117.245.170/** ou 
+**http://ec2-18-117-245-170.us-east-2.compute.amazonaws.com/**
 ## Authors
 
 ### Group 5: "Sertão Squad"
