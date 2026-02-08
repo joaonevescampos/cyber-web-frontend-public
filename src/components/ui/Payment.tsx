@@ -60,7 +60,7 @@ const Payment = forwardRef((_, ref) => {
       }
 
       const createCartResponse = await fetch(
-        `${import.meta.env.VITE_API_URL}/shopping_carts`,
+        `${import.meta.env.VITE_API_URL}shopping_carts`,
         {
           method: "POST",
           headers: {
